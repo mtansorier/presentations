@@ -1,0 +1,279 @@
+\documentclass{beamer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{pgfpages}
+%\setbeameroption{show notes}
+%\setbeameroption{show notes on second screen=right}
+\mode<presentation> {
+  \usetheme{Warsaw}
+  % ou autre ...
+
+  \setbeamercovered{transparent}
+  % ou autre chose (il est également possible de supprimer cette ligne)
+}
+
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage{tikz}
+\setbeamertemplate{footline}[frame number]
+% caractères spéciaux
+\usepackage{amsmath}
+\usepackage{lmodern}
+\usepackage{amssymb}
+\usepackage{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[Présentation Logiciel Libre] 
+{Logiciel Libre}
+%\subtitle {ne complÃ©ter que si l'article possÃ¨de un sous-titre}
+
+\author[Tansorier, Bouillot] 
+{M.~Tansorier \and E.~Bouillot}
+
+
+\date[Oct. 2017] 
+{Présentation et discutions autour du logiciel libre, ces avantages, son héritage, proposez vos alternatives au logiciel propriétaire. Partageons autour du Free Software avant de partager une Free Beer !, Oct. 2017}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+
+% *******************************
+% ****		PAGE DE GARDE	****
+% *******************************
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Plan}
+  \tableofcontents
+\end{frame}
+
+
+% *******************************
+% ****		INTRODUCTION		****
+% *******************************
+\section{Introduction}
+
+\subsection{Définition}
+
+% ——— INTERRACTION: Comment Les définirais vous ? ———
+\begin{frame}{Définition}
+	\begin{description}
+	  \item[Open source\footnote<2->{Définit par l'Open Source Initiative} :] \only<2->{La liberté d'accéder aux sources des programmes.}
+	  \item
+	  \item[Logiciel Libre\footnote<3->{Définit par le projet GNU et la Free Software Foundation} :] \only<3->{Un logiciel libre est un logiciel dont l'utilisation, l'étude, la modification et la duplication en vue de sa diffusion sont permises, techniquement et légalement.}
+	\end{description}
+\end{frame}
+
+\begin{frame}{Logiciel libre}
+	Le logiciel libre doit garantir 4 libertés fondamentales à son utilisateur telles que définies par la FSF (Free Software Foundation : http://www.fsf.org/ ).
+	\begin{itemize}
+	\item<1-> Liberté 1 : \textit{la liberté d’exécuter le programme pour tous les usages}
+	\item<2-> Liberté 2 : \textit{la liberté d’étudier le fonctionnement du programme, et de l’adapter à ses besoins}
+	\item<3-> Liberté 3 : \textit{la liberté de redistribuer des copies du logiciel}
+	\item<4-> Liberté 4 : \textit{la liberté d’améliorer le programme et de publier ses propres améliorations}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Open source}
+	L'OSI (Open Source Initiative) a définit OSD (Open Source Definition) comme 10 conditions pour que un logiciel soit open source:
+	Le logiciel libre doit garantir 4 libertés fondamentales à son utilisateur telles que définies par la FSF (Free Software Foundation : http://www.fsf.org/ ).
+	\onslide<2->
+	\tiny
+	\begin{itemize}
+	\item Conditions 1 : \textit{la libre distribution logicielle : la licence ne peut, par exemple, faire l’objet d’une redevance supplémentaire}
+	\item Conditions 2 : \textit{le code source doit être fourni ou accessible. Un patch peut être fourni en tant que package indépendant, ce qui n’est pas possible avec un logiciel libre ou il faut obligatoirement fournir toute le code même pour l’ajout d’un seul correctif}
+	\item Conditions 3 : \textit{les dérivés des œuvres doivent être permis}
+	\item Conditions 4 : \textit{l’intégrité du code source doit être préservée, la licence ne peut restreindre l’accès au code source} 
+	\item Conditions 5 : \textit{ pas de discrimination entre les groupes et les personnes : toute personne détentrice du logiciel bénéficie des termes de la licence tant qu’elle s’y conforme elle-même}
+	\item Conditions 6 : \textit{pas de discrimination entre les domaines d’application : la licence se limite à la propriété intellectuelle : elle ne peut en aucun cas réguler d’autres domaines politiques}
+	\item Conditions 7 : \textit{la licence s’applique sans dépendre d’autres contrats : on ne peut par exemple ajouter d’accord de confidentialité (« NDA » ou Non Disclosure Agreement) lors de la cession du logiciel}
+	\item Conditions 8 : \textit{la licence ne doit pas être propre à un produit, elle est attachée au code source et non à un logiciel particulier : une brique logicielle peut donc être ré-utilisée dans un logiciel différent, voir concurrent}
+	\item Conditions 9 : \textit{la licence d’un logiciel ne doit pas s’étendre à un autre}
+	\item Conditions 10 : \textit{la licence doit être neutre technologiquement, c’est-à-dire la qu’elle ne concerne que le code et pas les technologies et applications qui en découlent}
+	\end{itemize}
+	\normalsize
+\end{frame}
+
+\begin{frame}{Logiciel libre $ \ne $ gratuit}
+	Un logiciel libre n'est pas forcément gratuit par définition, attention à ne pas confondre le terme "free" anglais.
+	\newline
+	\newline
+	Par exemple, on peut trouver une même application payante sur le playstore google, mais gratuite sur F-droid. (Comme OSmand)
+\end{frame}
+
+\subsection{Différence}
+% ——— INTERRACTION: C'est mon interprétation ———
+\begin{frame}{Différence entre les deux}
+	Exemple de différence financière: \\
+	Une différence serait d'avoir une licence/clé à payer pour pouvoir utiliser le logiciel. Or dans un logiciel libre ceci serait impossible à cause de la liberté d’exécuter.
+	\newline
+	\newline
+	Il est tout de même possible de vendre un logiciel libre, ceci est encouragé par gnu.org. 	\newline
+	\newline
+	Selon Richard Stallman, la différence fondamentale entre les deux concepts réside dans leur \textbf{philosophie} : « l'open source est une méthodologie de développement; le logiciel libre est un mouvement social »
+\end{frame}
+
+
+
+% *******************************
+% ****		PHILOSOPHIE		****
+% *******************************
+
+\section{Philosophie}
+\begin{frame}{GAFAM}
+Nos environnements informatique utilisent des logiciel propriétaire, et pour la plupart détenue par quelques uns qui ont un poids important dans notre société. \\
+D'ou la discriminations du terme GAFAM: Google Apple Facebook Amazone Microsoft
+
+\end{frame}
+
+% TODO: Communoté, ...
+
+
+
+% *******************************
+% ****		ALTERNATIVE		****
+% *******************************
+
+\section{Alternatives}
+\begin{frame}{Les alternatives existent}
+Il y a plusieurs mouvement pour proposer une des alternatives, comme:
+\begin{itemize}
+	\item degooglisons internet : \url{https://framalibre.org} \url{https://degooglisons-internet.org}
+	\item Les chatons : \url{https://chatons.org}
+	\item Prism break : \url{https://prism-break.org/fr}
+	\item Projet GNU : \url{http://www.gnu.org}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Les alternatives existent}
+Différents supports:
+\begin{itemize}
+	\item Réseau
+	\item Ordinateurs
+	\item Online
+	\item Mobile
+	\item Hardware
+	\item Autre
+\end{itemize}
+\end{frame}
+
+
+
+% *******************************
+% ****		TABLE RONDE		****
+% *******************************
+
+\section{Table ronde}
+\begin{frame}{Table ronde}
+Jeux:\\
+	Donner un logiciel propriétaire que vous utiliser et que vous aimeriez bien avoir en libre.\\
+	Tous ensemble essayons de trouver cette alternative.\\
+	Ce qui est intéressant n'est pas forcément de connaitre par coeur une alternative, mais de montrer sa démarcher pour le trouver.\newline
+	\newline
+	Exemple: Trello\\
+	Je sais que frama-soft propose des alternatives en ligne, je vais sur leur site et je recherche: Il existe https://framaboard.org/
+\end{frame}
+
+\subsection{Réseau}
+\begin{frame}{Réseau}
+Vos exemples ...
+Dropbox GoogleDrive
+Picassa
+Youtube
+github
+\end{frame}
+
+\subsection{Ordinateur}
+\begin{frame}{Ordinateur}
+Vos exemples ...
+windows
+photoshop
+facebook
+skype
+
+chrome
+\end{frame}
+
+\subsection{Online}
+\begin{frame}{Online}
+Vos exemples ...
+doodle
+google search
+google earth
+\end{frame}
+
+\subsection{Mobiles}
+\begin{frame}{Mobiles} 
+Vos exemples ...
+google play
+google maps
+messenger
+WathsApp
+cyanogenmod
+\end{frame}
+
+\subsection{Hardware}
+\begin{frame}{Hardware} 
+Hardware
+\begin{itemize}
+	\item ardouino -> Freeduino, boarduino, Pinguino
+	\item rapsberry -> BeagleBoard
+	\item PC libre ?
+\end{itemize}
+\end{frame}
+
+\subsection{Autre}
+\begin{frame}{Autre} 
+\begin{itemize}
+	\item bière libre: http://linuxfr.org/news/la-biere-libre-colibibine-est-de-retour-pour-les-rmll
+	\item graine libre: http://linuxfr.org/news/open-source-seeds-les-graines-de-tomates-libres
+	\item co-voiturage libre: https://covoiturage-libre.fr/
+\end{itemize}
+\end{frame}
+
+
+
+% *******************************
+% ****		GROUPWARE		****
+% *******************************
+
+\section{Groupware smile}
+\begin{frame}{Libre ?}
+Smile cherche un nouveau groupware, il envisage de passer par google. Est-ce pertinant sachant que de nombreuses alternative libre/opensource existe.\\
+De plus onlyoffice à annoncé sa compatibilité avec owncloud, un service que nous utilisons déjà.\\
+\url{https://fr.wikipedia.org/wiki/Groupware\#Exemples\_de\_logiciels\_libres}
+\\
+\url{http://linuxfr.org/news/integration-de-owncloud-avec-onlyoffice}
+%https://fr.wikipedia.org/wiki/Groupware#Exemples_de_logiciels_libres
+%$http://linuxfr.org/news/integration-de-owncloud-avec-onlyoffice$
+téléphone en ligne: 
+\url{http://linuxfr.org/news/librem-5-un-projet-de-telephone-mobile-libre-tournant-sous-gnu-linux}
+\end{frame}
+
+
+
+% *******************************
+% ****		CONCLUSION		****
+% *******************************
+
+\section{Conclusion}
+\begin{frame}{Challenge and Futur Work}
+  Challenge : 
+  \begin{itemize}
+  \item
+  \end{itemize}
+
+  Futur Work :
+  \begin{itemize}
+  \item
+  \end{itemize}
+\end{frame}
+
+\end{document}
