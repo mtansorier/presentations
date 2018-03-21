@@ -2,7 +2,7 @@ Pésentations
 ============
 
 1. L'alternative Logiciel Libre
-
+2. Yocto - devtool - Ansible: La dernière recette de ma grand-mère
 
 
 L'alternative Logiciel Libre
@@ -13,6 +13,11 @@ _Présentation et discutions autour du logiciel libre, ces avantages, son hérit
 Nom du projet à compiler: **Logiciel_Libre**
 
 
+Yocto - devtool - Ansible: La dernière recette de ma grand-mère
+---------------------------------------------------------------
+_Introduction à Yocto avec traveaux pratique sur une rapsberry pi, puis présentation de l'outils devtool avec mise en pratique. Et pour finir proposition d'utilisation d'Ansible pour installer un environnement de dev Yocto_
+
+Nom du projet à compiler: **Yocto-RapsberryPi-devtool-Ansible**
 
 Compilation
 ===========
