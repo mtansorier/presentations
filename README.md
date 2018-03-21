@@ -37,3 +37,8 @@ Pour supprimer un projet
 $ make clean-<projet>
 ```
 
+Liens Utiles
+============
+
+Thèmes complets de présentation:
+[http://mcclinews.free.fr/latex/beamergalerie/completsgalerie.html]
