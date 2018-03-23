@@ -485,15 +485,16 @@ $ git clone git://git.openembedded.org/meta-openembedded -b rocko
 
 \subsection{Construire une distribution générique}
 \begin{frame}[fragile]
-Il faut maintenant paramétré la \texttt{MACHINE} et la \texttt{DISTRO} que l'on souhaite.\newline
-Il faut tout d'abord sourcer son environnement afin que bitbake ait connaissance des variable de paramétrage.\newline
-Ces variables sont écrites dans le fichier \texttt{local.conf} et \texttt{bblayers.conf}.\newline
-\newline
-Pour les générer il faut utiliser le scripte de yocto:
-\begin{lstlisting}[style=shell]
+Pour construire son image il faut d'abord:
+\begin{itemize}
+	\item Sourcer l'environnement pour bitbake
+		\begin{lstlisting}[style=shell]
 $ . oe-init-build-env
-\end{lstlisting}
-Cela nous créer un dossier \texttt{build} dans lequel tout va se passer.
+		\end{lstlisting}
+		Cela nous créer un dossier \texttt{build} dans lequel tout va se passer.
+	\item Paramétré la \texttt{MACHINE} et la \texttt{DISTRO}\newline
+		Ces variables sont écrites dans le fichier \texttt{local.conf}.
+\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -506,8 +507,6 @@ et ajouter le layer manquant dans \texttt{\$POKY/build/conf/bblayers.conf}
 \begin{lstlisting}[style=bitbake]
 BBLAYERS += " \
     ${TOPDIR}/../meta-raspberrypi \
-    ${TOPDIR}/../meta-openembedded/meta-python \
-    ${TOPDIR}/../meta-openembedded/meta-oe \
 "
 \end{lstlisting}
 \textcolor{gray}{\tiny{Les chemains sont en général absolue comme: \texttt{/home/username/path/to/project/poky/meta-raspberrypi}}}\newline
@@ -539,6 +538,17 @@ De plus dans \texttt{meta-python/conf/layer.conf} on a
 LAYERDEPENDS_meta-python = "core openembedded-layer"
 \end{lstlisting}
 \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+Il faut donc rajouter les layers qui vont bien dans \texttt{bblayers.conf}
+\begin{lstlisting}[style=bitbake,escapeinside={<@}{@>}]
+BBLAYERS += " \
+    ${TOPDIR}/../meta-raspberrypi \
+    <@\textit{\texttt{\textcolor{green!80!black}{\$\{TOPDIR\}/../meta-openembedded/meta-python}}}@> \
+    <@\textit{\texttt{\textcolor{green!80!black}{\$\{TOPDIR\}/../meta-openembedded/meta-oe}}}@> \
+"
+\end{lstlisting}
 \end{frame}
 
 
@@ -594,7 +604,7 @@ Créer sa distro avec \texttt{./conf/distro/distromeetup.conf}
 require conf/distro/poky.conf
 
 DISTRO = "distromeetup"
-DISTRO_NAME = "Distro example"
+DISTRO_NAME = "Distro meetup example"
 DISTRO_VERSION = "0.1"
 
 # Ajout d'option pour la distribution
@@ -607,7 +617,7 @@ PACKAGE_CLASSES = "package_ipk"
 
 Si on souhaite utiliser la nouvelle distribution il faut ajouter dans \texttt{\$POKY/build/conf/local.conf}
 \begin{lstlisting}[style=bitbake]
-MACHINE = "raspberrypi3_64"
+MACHINE = "raspberrypi3-64"
 DISTRO = "distromeetup"
 \end{lstlisting}
 \end{frame}
@@ -652,6 +662,12 @@ IMAGE_INSTALL += " \
 {\color[RGB]{232,120,0}\texttt{setkey}} nouvelle recette permettant de passer qwerty en bépo
 \end{frame}
 
+\begin{frame}
+\begin{center}
+\huge{Testons notre image !}
+\includegraphics[width=1\textwidth]{images/weston-desktop.png}
+\end{center}
+\end{frame}
 
 
 % *******************************
