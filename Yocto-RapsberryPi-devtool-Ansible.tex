@@ -695,6 +695,7 @@ Les commandes de base:
 	\item[\texttt{devtool add}] Ajoute un nouveau software à construire
 	\item[\texttt{devtool modify}] Génère un environnement pour modifier les sources d'un composant
 	\item[\texttt{devtool upgrade}] Met à jour une recette existante
+	\item[\texttt{devtool reset}] Arrête le contexte de développement
 \end{description}
 \end{frame}
 
@@ -787,6 +788,7 @@ Les étapes:
 \begin{enumerate}
 \item Faire la modification
 \item Tester
+\item Commiter
 \item Appliquer la modification sous forme de patch
 \begin{lstlisting}[style=shell]
 $ devtool update-recipe weston
