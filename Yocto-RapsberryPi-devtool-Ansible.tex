@@ -17,7 +17,12 @@
 \useoutertheme[]{miniframes} % barre menu du haut
 \setbeamertemplate{frametitle}[default] % replace le titre à la bonne place
 \useinnertheme{rounded} % arrondi les angles
-\setbeamertemplate{footline}[frame number]
+
+\setbeamertemplate{footline}[text line]{
+\textcolor{gray}{%
+	\parbox{\linewidth}{\vspace*{-8pt}Smile ECS\hfill\insertshortauthor\hfill\insertpagenumber/\inserttotalframenumber}}
+}
+\beamertemplatenavigationsymbolsempty
 
 % Language
 \usepackage[french]{babel}
