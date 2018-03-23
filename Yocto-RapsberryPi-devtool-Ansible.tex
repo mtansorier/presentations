@@ -85,7 +85,7 @@
   BBLAYERS,MACHINE,DISTRO,LAYERDEPENDS_meta-python,DISTRO_FEATURES_remove,%
   DISTRO_FEATURES_append,VIRTUAL-RUNTIME_init_manager,require,DISTRO_NAME,%
   DISTRO_VERSION,DISTRO_FEATURES_DEFAULT,DISTRO_FEATURES_LIBC,PACKAGE_CLASSES,%
-  POKY_DEFAULT_DISTRO_FEATURES,DISTRO_FEATURES,IMAGE_FEATURES,IMAGE_INSTALL},
+  POKY_DEFAULT_DISTRO_FEATURES,DISTRO_FEATURES,IMAGE_FEATURES,IMAGE_INSTALL,BBPATH},
   keywordstyle=\bfseries\color[RGB]{152,251,152},
 }
 
@@ -426,7 +426,7 @@ Les cartes associés
 	\item Beaglebone
 	\item intel-core2-32
 \end{itemize}
-\textcolor{gray}{\tiny{Les différents BSP sont répertoriés sur le site de yoctoproject : https://www.yoctoproject.org/downloads/bsps}}
+\textcolor{gray}{\tiny{Les différents BSP sont répertoriés sur le site de yoctoproject : \url{https://www.yoctoproject.org/downloads/bsps}}}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -461,19 +461,20 @@ DISTRO = "distromeetup"
 \end{center}
 \end{frame}
 
-\subsection{installer l'invironnement yocto}
-\begin{frame}{TP Raspberry Pi}
-\begin{itemize}
-	\item installer l'environnement
-	\item construire une distribution générique
-	\item créer sa propre distribution
-	\item tester son image
-\end{itemize}
+\subsection{installer l'environnement Yocto}
+\begin{frame}
+Les étapes:
+\begin{enumerate}
+	\item Installer l'environnement
+	\item Construire une distribution générique
+	\item Créer sa propre distribution
+	\item Tester son image
+\end{enumerate}
 \end{frame}
 
-\subsection{installer l'environnement yocto}
+\subsection{installer l'environnement Yocto}
 \begin{frame}[fragile]
-On se base sur la dernière version de yocto stable disponible, c'est à dire rocko qui est sortie en octobre 2017. (la prochaine est en avril 2018)
+On se base sur la dernière version de Yocto stable disponible, c'est à dire \texttt{rocko} qui est sortie en octobre 2017. \textcolor{gray}{\tiny{(la prochaine est en avril 2018)}}
 \begin{lstlisting}[style=shell]
 $ git clone git://git.yoctoproject.org/poky -b rocko
 $ cd poky
@@ -482,7 +483,7 @@ $ git clone git://git.openembedded.org/meta-openembedded -b rocko
 \end{lstlisting}
 \end{frame}
 
-\subsection{construire une distribution générique}
+\subsection{Construire une distribution générique}
 \begin{frame}[fragile]
 Il faut maintenant paramétré la \texttt{MACHINE} et la \texttt{DISTRO} que l'on souhaite.\newline
 Il faut tout d'abord sourcer son environnement afin que bitbake ait connaissance des variable de paramétrage.\newline
@@ -496,12 +497,12 @@ Cela nous créer un dossier \texttt{build} dans lequel tout va se passer.
 \end{frame}
 
 \begin{frame}[fragile]
-	Il reste plus qu'à modifier \texttt{\$POKY/build/conf/local.conf}
+Il reste plus qu'à modifier \texttt{\$POKY/build/conf/local.conf}
 \begin{lstlisting}[style=bitbake]
 # Mes parametres
 MACHINE = "raspberrypi3-64"
 \end{lstlisting}
-et \texttt{\$POKY/build/conf/bblayers.conf}
+et ajouter le layer manquant dans \texttt{\$POKY/build/conf/bblayers.conf}
 \begin{lstlisting}[style=bitbake]
 BBLAYERS += " \
     ${TOPDIR}/../meta-raspberrypi \
@@ -545,6 +546,9 @@ LAYERDEPENDS_meta-python = "core openembedded-layer"
 %https://www.yoctoproject.org/docs/2.5/mega-manual/mega-manual.html#enabling-wayland-in-an-image
 \begin{frame}
 \begin{center}
+\textcolor{smileOrange}{\huge{Étape suivante:}}
+\end{center}
+\begin{center}
 \textcolor{smileOrange}{\huge{Créer sa propre distribution}}
 \end{center}
 \end{frame}
@@ -578,7 +582,7 @@ BBLAYERS += " \
     ${TOPDIR}/../meta-raspberrypi \
     ${TOPDIR}/../meta-openembedded/meta-python \
     ${TOPDIR}/../meta-openembedded/meta-oe \
-    <@\textit{\texttt{\textcolor{red}{\$\{TOPDIR\}/../meta-meetup}}}@> \
+    <@\textit{\texttt{\textcolor{green!80!black}{\$\{TOPDIR\}/../meta-meetup}}}@> \
 "
 \end{lstlisting}
 \end{frame}
@@ -653,7 +657,7 @@ IMAGE_INSTALL += " \
 % *******************************
 % ****    OUTILS DEVTOOL    ****
 % *******************************
-\section{Outils \texttt{devtool}}
+\section{\texttt{devtool}}
 
 \begin{frame}{\texttt{devtool}}
 \tableofcontents[currentsection,hideallsubsections]
@@ -669,10 +673,11 @@ IMAGE_INSTALL += " \
 
 \begin{frame}
 \texttt{devtool} est un outils très utiles lorsque l'on souhaite créer, développer ou modifier un recette et ses sources.\newline
+\newline
 Les commandes de base:
 \begin{description}
-	\item[\texttt{devtool add}] Ajoute un nouveau software à construir
-	\item[\texttt{devtool modify}] Génère un environnement pour modifier les sources d'une composant
+	\item[\texttt{devtool add}] Ajoute un nouveau software à construire
+	\item[\texttt{devtool modify}] Génère un environnement pour modifier les sources d'un composant
 	\item[\texttt{devtool upgrade}] Met à jour une recette existante
 \end{description}
 \end{frame}
@@ -694,7 +699,7 @@ De même pour modifier une recette
 \subsection{Le comportement de \texttt{devtool}}
 
 \begin{frame}[fragile]
-Dès lors devtool créer une layers spéciale (\texttt{workspace}) qui prend la priorité maximal sur les autres layers
+Dès lors \texttt{devtool} créer une layer spéciale (\texttt{workspace}) qui prend la priorité maximal sur les autres layers.
 \begin{lstlisting}[style=shell,breaklines=false,xleftmargin=-18px,xrightmargin=-18px]
 $ bitbake-layers show-layers
 NOTE: Starting bitbake server...
@@ -762,7 +767,7 @@ Ajout du patch "Fix an uninitialized variable"
 \end{frame}
 
 \begin{frame}[fragile]
-Les étapes
+Les étapes:
 \begin{enumerate}
 \item Faire la modification
 \item Tester
@@ -789,7 +794,7 @@ $ devtool reset weston
 % *******************************
 % ****     OUTILS ANSIBLE    ****
 % *******************************
-\section{Outils Ansible}
+\section{Ansible}
 
 \begin{frame}{Ansible}
 \tableofcontents[currentsection,hideallsubsections]
@@ -813,20 +818,20 @@ Il permet de :
 	\item gérer des configurations
 	\item lancer des tâches
 \end{itemize}
+Pour:
 \begin{itemize}
-	\item[] Sur
-	\begin{itemize}
-	\item une machine
+	\item une machine donnée
 	\item plusieurs machines
-	\end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}
-	Un des avantage est qu'il utilise des fichiers de configuration au format YAML.
+Un des avantage est qu'il utilise des fichiers de configuration au format YAML.\newline
+\newline
+Le format YAML est:
 \begin{itemize}
-	\item YAML est humainement lisibles
-	\item et plus facile à géré que certain autres formats
+	\item humainement lisibles
+	\item plus facile à géré que certain autres formats %comme XML
 \end{itemize}
 \end{frame}
 
@@ -853,8 +858,7 @@ $ ansible linuxembedded.exemple.fr -a "/bin/ping 8.8.8.8 -c1"
 \end{frame}
 
 \begin{frame}[fragile]
-Ansible fournit un ensemble de modules\newline
-Qui permettent de lancer de action spécifique à distance
+Ansible fournit un ensemble de modules qui permettent de lancer des actions spécifiques à distance.
 \begin{lstlisting}[style=shell]
 $ ansible all -m ping
 <address_ip> | SUCCESS => {
@@ -890,10 +894,10 @@ $ ansible-playbook mon-fichier.yml
 \begin{exampleblock}{Buildroot}
 Le standard YAML a été créé en 2001 et est utilisé dans divers projets.
 \end{exampleblock}
-Un fichier YAML est formé de
+Un fichier YAML est formé de:
 \begin{itemize}
 	\item variables
-	\item dictionnaires (clé/valeur)
+	\item dictionnaires \textcolor{gray}{(clé/valeur)}
 	\item listes
 \end{itemize}
 \end{frame}
@@ -930,7 +934,7 @@ Les dictionnaires sont définis sous la forme \textit{\texttt{clé: valeur}}.
 \end{frame}
 
 \begin{frame}[fragile]{Les listes}
-Les listes sont définies avec \textit{\texttt{-␣}}, un tiret suivi d’un espace.
+Les listes sont définies avec \textit{\texttt{-\textcolor{gray}{␣}}}, un tiret suivi d’un espace.
 \begin{lstlisting}[style=bitbake]
 # Une liste de fruits
  - Pomme
@@ -940,7 +944,7 @@ Les listes sont définies avec \textit{\texttt{-␣}}, un tiret suivi d’un esp
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Mélangeant des différentes syntaxes}
+\begin{frame}[fragile]{Mélanger les syntaxes}
 D’autres choses plus complexes sont possibles en mélangeant les différentes syntaxes:
 \begin{lstlisting}[style=bitbake]
 # Liste de plusieurs employes
@@ -1000,7 +1004,7 @@ D'autres sous-options:
 
 \begin{frame}[fragile]{Module particulier: hosts}
 Ce module est obligatoire.\newline
-il fait référence aux hôtes dans \texttt{/etc/ansible/hosts}.
+Il fait référence aux hôtes dans \texttt{/etc/ansible/hosts}.
 \begin{lstlisting}[style=bitbake]
 - hosts: all
   remote_user: root
@@ -1025,11 +1029,11 @@ On utilise le \texttt{hosts} local
 
 \begin{frame}[fragile]{Répertoire de travail}
 Pour centraliser les sources on utilise un variable \texttt{TOP\_SRCDIR}.\newline
-Elle sera passé en paramètre de la commande Ansible
+Elle sera passé en paramètre de la commande Ansible.
 \begin{lstlisting}[style=shell]
 --extra-vars "TOP_SRCDIR=<path_to_top_srcdir>"
 \end{lstlisting}
-Ce qui donnera
+Ce qui donnera:
 \begin{lstlisting}[style=bitbake]
 - name: "Get poky"
   git:
@@ -1078,7 +1082,7 @@ Ce qui donnera
 \end{frame}
 
 \begin{frame}[fragile]{Lancer}
-Pour lancer le projet
+Pour lancer le projet:
 \begin{lstlisting}[style=shell]
 $ ansible-playbook mon-fichier.yml --extra-vars "TOP_SRCDIR=/home/user/mon-projet/"
 \end{lstlisting}
