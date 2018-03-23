@@ -92,6 +92,10 @@
 % pour les schemas
 \usepackage{tikz}
 \usepackage{tikz}
+
+% Pour utiliser des colonnes
+\usepackage{multicol}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title[Yocto]{Yocto - \texttt{devtool} - Ansible \\ \textbf{La dernière recette de ma grand-mère}}
 
@@ -952,6 +956,7 @@ D’autres choses plus complexes sont possibles en mélangeant les différentes 
 \begin{frame}[fragile]{Les modules}
 Les modules lut par Ansible sont déclaré sous la forme \textit{\texttt{clé: valeur}}.\newline
 Voici une liste non exhaustive de types de modules disponibles :
+\begin{multicols}{2}
 \begin{itemize}
 	\item git
 	\item patch
@@ -964,6 +969,7 @@ Voici une liste non exhaustive de types de modules disponibles :
 	\item lxc\_container
 	\item make
 \end{itemize}
+\end{multicols}
 \end{frame}
 
 
