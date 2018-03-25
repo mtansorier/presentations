@@ -3,6 +3,8 @@ PRESENTATIONS_PDF = $(addsuffix .pdf,$(PRESENTATIONS))
 
 Logiciel_Libre: Logiciel_Libre.pdf
 
+Yocto-RapsberryPi-devtool-Ansible: Yocto-RapsberryPi-devtool-Ansible.pdf
+
 all: $(PRESENTATIONS)
 
 %.pdf: %.tex
