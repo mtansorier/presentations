@@ -19,6 +19,18 @@ _Introduction à Yocto avec traveaux pratique sur une rapsberry pi, puis présen
 
 Nom du projet à compiler: **Yocto-RapsberryPi-devtool-Ansible**
 
+Compilation:
+Si on veux compiler sans utiliser le template Smile, changer:
+```
+-\documentclass[compress]{smilebeamer}
++\documentclass[compress]{beamer}
+```
+et ajouter
+```
+\usepackage{xcolor}
+\definecolor{smileOrange}{RGB}{254,128,86}
+```
+
 Compilation
 ===========
 
