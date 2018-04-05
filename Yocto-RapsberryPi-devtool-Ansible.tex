@@ -191,7 +191,7 @@ Avant tout, un peut de contexte.\newline
 \begin{itemize}
 	\item Est-ce que Yocto est le seul outils qui existe ?
 	\item Qu'est-ce qu'il a de plus que les autres ?
-	\item ...
+	\item Comment c'est architecturé ?
 \end{itemize}
 \end{frame}
 
@@ -235,10 +235,10 @@ D’autres outils permettent de créer des distributions Linux pour les système
 \subsection{Qu'est ce que Yocto a de plus ?}
 
 \begin{frame}
-	Yocto et Buildroot sont deux outils très proches mais avec fonctionnalité qui diffères en fonction des besoins
-	\begin{center}
+Yocto et Buildroot sont deux outils très proches mais avec fonctionnalité qui diffères en fonction des besoins
+\begin{center}
 	\includegraphics[width=0.7\textwidth]{schemas/buildroot_vs_yocto.png}	
-	\end{center}
+\end{center}
 \end{frame}
 
 \begin{frame}
@@ -372,7 +372,7 @@ D'autre plus spécifique
 \begin{tikzpicture}[node distance=1.2cm]
 \node [block, fill=green!60!black!50]   (read)   {LECTURE RECETTE};
 \node [block, below of=read]  (fetch)  {FETCH};
-\node [block, below of=fetch] (unpack) {Unpack};
+\node [block, below of=fetch] (unpack) {UNPACK};
 \node [block, below of=unpack] (patch) {PATCH};
 \node [block, below of=patch] (configure) {CONFIGURE};
 \node [block, right of=configure, xshift=3cm] (compile) {COMPILE};
@@ -393,7 +393,7 @@ D'autre plus spécifique
 \end{frame}
 
 \begin{frame}{recette}
-\begin{block}{À quoi ça ressemble un recette ?}
+\begin{block}{À quoi ça ressemble une recette ?}
 \includegraphics[width=\textwidth]{images/recette-yocto.png}
 \end{block}
 \end{frame}
@@ -430,7 +430,7 @@ Les cartes associés
 \end{frame}
 
 \begin{frame}[fragile]
-Le paramétrage de la \texttt{DISTRO} et de la \textsl{MACHINE} se fait en local.
+Le paramétrage de la \texttt{DISTRO} et de la \texttt{MACHINE} se fait en local.
 \newline \\
 \texttt{\$POKY/build/conf/local.conf}
 \begin{lstlisting}[style=bitbake]
@@ -440,7 +440,7 @@ MACHINE ??= "qemux86"
 DISTRO ?= "poky"
 
 # Mes parametres
-MACHINE = "raspberrypi3"
+MACHINE = "raspberrypi3-64"
 DISTRO = "distromeetup"
 \end{lstlisting}
 \end{frame}
@@ -461,18 +461,17 @@ DISTRO = "distromeetup"
 \end{center}
 \end{frame}
 
-\subsection{installer l'environnement Yocto}
+\subsection{Installer l'environnement Yocto}
 \begin{frame}
 Les étapes:
 \begin{enumerate}
-	\item Installer l'environnement
+	\item Installer l'environnement de développement
 	\item Construire une distribution générique
 	\item Créer sa propre distribution
 	\item Tester son image
 \end{enumerate}
 \end{frame}
 
-\subsection{installer l'environnement Yocto}
 \begin{frame}[fragile]
 On se base sur la dernière version de Yocto stable disponible, c'est à dire \texttt{rocko} qui est sortie en octobre 2017. \textcolor{gray}{\tiny{(la prochaine est en avril 2018)}}
 \begin{lstlisting}[style=shell]
@@ -548,6 +547,7 @@ BBLAYERS += " \
     <@\textit{\texttt{\textcolor{green!80!black}{\$\{TOPDIR\}/../meta-openembedded/meta-oe}}}@> \
 "
 \end{lstlisting}
+\textcolor{gray}{On peut maintenant construire et tester une image}
 \end{frame}
 
 
@@ -684,10 +684,10 @@ IMAGE_INSTALL += " \
 \end{center}
 \end{frame}
 
-\subsection{Les commandes de bases}
+\subsection{Les commandes de base}
 
 \begin{frame}
-\texttt{devtool} est un outils très utiles lorsque l'on souhaite créer, développer ou modifier un recette et ses sources.\newline
+\texttt{devtool} est un outils très utiles lorsque l'on souhaite créer, développer ou modifier une recette et ses sources.\newline
 \newline
 Les commandes de base:
 \begin{description}
@@ -715,7 +715,7 @@ De même pour modifier une recette
 \subsection{Le comportement de \texttt{devtool}}
 
 \begin{frame}[fragile]
-Dès lors \texttt{devtool} créer une layer spéciale (\texttt{workspace}) qui prend la priorité maximal sur les autres layers.
+Dès lors \texttt{devtool} créer un layer spécial (\texttt{workspace}) qui prend la priorité maximal sur les autres layers.
 \begin{lstlisting}[style=shell,breaklines=false,xleftmargin=-18px,xrightmargin=-18px]
 $ bitbake-layers show-layers
 NOTE: Starting bitbake server...
@@ -911,7 +911,7 @@ $ ansible-playbook mon-fichier.yml
 \end{frame}
 
 \begin{frame}
-\begin{exampleblock}{Buildroot}
+\begin{exampleblock}{YAML}
 Le standard YAML a été créé en 2001 et est utilisé dans divers projets.
 \end{exampleblock}
 Un fichier YAML est formé de:
