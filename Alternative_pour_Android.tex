@@ -1,0 +1,288 @@
+% Copyright (C)  2018  TANSORIER.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.3
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+% A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+% https://www.gnu.org/licenses/fdl-1.3.html
+
+% compress option to have horyzontal circle
+\documentclass[compress]{beamer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Thèmes suppélmentaires
+\useoutertheme[]{miniframes} % barre menu du haut
+\setbeamertemplate{frametitle}[default] % replace le titre à la bonne place
+\useinnertheme[shadow=true]{rounded} % arrondi les angles
+\usecolortheme{orchid}
+\usecolortheme{whale}
+
+% Language
+\usepackage[french]{babel}
+
+% Pour les hyperliens
+\usepackage{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[U-Boot]{Café Vie Privée \\ \textbf{Alternative pour Android}}
+
+\author[Café Vie Privée]{Café Vie Privée}
+
+\date[Août 2018]{Présentation d'outils libres pour se protéger sur Android}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Pour enregistrer l'écran
+% ========================
+% (activer le debugage par usb pour accèder vie adb)
+% adb shell screenrecord --output-format=h264 - | ffplay -
+
+\begin{document}
+
+% *******************************
+% ****     PAGE DE GARDE     ****
+% *******************************
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+
+% *******************************
+% ****      INTRODUCTION     ****
+% *******************************
+
+\begin{frame}{Déroulé}
+\tableofcontents[hideallsubsections]
+\end{frame}
+
+\section{Pourquoi se protéger ?}
+
+\subsection{Qu'est-ce que Android}
+
+\begin{frame}{}
+\begin{block}{Wikipedia}
+	\emph{\href{https://fr.wikipedia.org/wiki/Android}{Android}} est un système d'exploitation mobile fondé sur le noyau Linux et développé actuellement par Google.
+\end{block}
+Android à été lancé en 2017.\newline
+Le code est sous \emph{licence apache (ASL)}. Il peut donc être intégré dans des applications propriétaires.
+\end{frame}
+
+\begin{frame}{Quelques infos}
+On peut le trouver sur
+\begin{itemize}
+	\item Téléphone
+	\item Tablette
+	\item Télévision
+	\item Livre électronique (ex: chomebook)
+	\item Montres
+	\item Voitures
+	\item …
+\end{itemize}
+Il possède plus de 80\% de part de marché (en 2015) 
+\end{frame}
+
+\subsection{Économie de la surveillance}
+\begin{frame}{Les Publicitaires}
+Les applications dépendes d'un model économique, qui souvent est dépendant des publicitaires.\newline
+\newline
+Pour cela ils utilisent des \texttt{pisteurs}.
+\end{frame}
+
+\begin{frame}{Exodus Privacy}
+\begin{block}{Exodus Privacy}
+Elle développe une plate-forme d'analyse des applications Android qui liste les traqueurs qui y sont présents.
+\end{block}
+Créer en 2017.\newline
+\end{frame}
+
+\begin{frame}
+Permet de connaitre les autorisations et les pisteurs de chaque applications.
+\end{frame}
+
+\subsection{Programme de surveillance}
+\begin{frame}{Les enjeux}
+Il existe de nombreux programme de surveillance plus ou moins connus.
+\begin{block}{Jérémy Zimmermamn}
+Ne pas confondre entre: j'ai rien à me reprocher et j'ai rien à cacher.
+\end{block}
+Cf. Lo documentaire Notiong To Hide
+\end{frame}
+
+\begin{frame}{}
+Refusez les programmes de surveillance des données comme PRISM, XKeyscore et Tempora.
+% PRISM: Progamme de surveillanc américan. Collecte les données sur internet.
+%	https://fr.wikipedia.org/wiki/PRISM_(programme_de_surveillance)
+% XKeyscore: Programme de surveillance créer par la NSA. Collecte quasi systématique des activités de tout utilisateur sur Internet.
+%            Révélé en juillet 2013.
+% 	https://fr.wikipedia.org/wiki/XKeyscore
+% Tempora: Programme britanique permettant d'intercepter les données transitant par les câbles en fibre optique entre l'europe et les États-Unis.
+
+\begin{tiny}
+\begin{block}{PRISM}
+Progamme de surveillanc américan créer par la NSA. Collecte les données sur internet.
+Edward Snowden a dénoncé ce programme en juin 2013.
+\end{block}
+
+\begin{block}{XKeyscore}
+Programme de surveillance créer par la NSA. Collecte quasi systématique des activités de tout utilisateur sur Internet. Révélé en juillet 2013.
+\end{block}
+
+\begin{block}{Tempora}
+Programme britanique permettant d'intercepter les données transitant par les câbles en fibre optique 	entre l'europe et les États-Unis.
+\end{block}
+\end{tiny}
+\end{frame}
+
+\begin{frame}{Contre attaque}
+Il existe des pages pour se défendre contre ça:
+\url{https://prism-break.org/fr/categories/android/}
+
+On y reviendra :)
+\end{frame}
+
+\subsection{La surveillance de masse}
+
+\begin{frame}{Les puissants}
+Nos environnements informatique utilisent des \textbf{logiciels propriétaires}, et pour la plupart détenue par quelques uns qui ont un poids important dans notre société. \newline
+\newline
+D'où la création du terme \textbf{GAFAM}: Google Apple Facebook Amazon Microsoft
+\end{frame}
+
+\begin{frame}{Les besoins}
+Accerder au code source permet d'auditer le code et vérifier que le logiciel corresponde à ce pourquoi il est fait. \newline
+\newline
+Le logiciel libre permet de modifier le code pour nos besoins personnel.
+\end{frame}
+
+
+% *******************************
+% ****  COMMENT SE PROTEGER  ****
+% *******************************
+
+\section{Comment se protéger ?}
+
+\begin{frame}
+Utiliser du logiciel Libre.\newline
+Il permet d'auditer le code source.\newline
+Il permet de l'adapter pour soit même.\newline
+Donc il ne dépend pas d'un modèle économique particulier.
+\end{frame}
+
+\subsection{Quels logiciel ?}
+\begin{frame}
+\begin{itemize}
+	\item Magasin d'applications
+	\item Navigation
+	\item Réseaux sociaux
+	\item Cartes
+	\item Multimédia
+	\item Recherches
+	\item Divers
+\end{itemize}
+\end{frame}
+
+
+% *******************************
+% ****   LES APPLICATIONS    ****
+% *******************************
+
+\section{Les Applications}
+
+\subsection{Magasin d'application}
+
+\begin{frame}
+Playstore $\to$ F-Droid\newline
+Playstore $\to$ Yalp store
+\end{frame}
+
+\subsection{Navigation}
+\begin{frame}
+Chrome $\to$ Firefox\newline
+Orbot/Orfox\newline
+Duckduckgo
+\end{frame}
+
+\subsection{Réseaux sociaux}
+\begin{frame}
+slim social\newline
+diaspora\newline
+mastodon
+\end{frame}
+
+\subsection{Messagerie instantanée}
+\begin{frame}
+Signal\newline
+Silence\newline
+Conversation
+\end{frame}
+
+\subsection{Cartes}
+\begin{frame}
+Openstreetmaps\newline
+OsmAnd
+\end{frame}
+
+\subsection{multimédia}
+\begin{frame}
+Youtube $\to$ newPip\newline
+peertube $\to$ Thoruim
+\end{frame}
+
+\subsection{Recheche}
+\begin{frame}
+google $\to$ duckduckgo
+\end{frame}
+
+\subsection{Divers}
+\begin{frame}
+Clavier: google $\to$ AnySoftKey\newline
+Météo: Votre météo locale\newline
+Caméra: Open Caméra\newline
+Transport: Transportr
+\end{frame}
+
+
+% *******************************
+% ****     OS ALTERNATIF     ****
+% *******************************
+
+\section{OS Alternatif}
+
+\subsection{État de l'art}
+\begin{frame}
+Il n'existe pas beaucoup d'alternative complètes, car la difficulté est le support matériel du téléphone.
+
+Exemple:
+\begin{itemize}
+	\item Replicant
+	\item PureOS
+	\item LineageOS
+\end{itemize}
+\end{frame}
+
+\subsection{Replicant}
+\begin{frame}
+\href{https://fr.wikipedia.org/wiki/Replicant_\%28syst\%C3\%A8me_d\%27exploitation\%29}{Replicant} est un système d'exploitation entièrement libre pour les smartphones et les tablettes, en remplaçant les composants privateurs d'Android par leurs équivalents libres.
+\end{frame}
+
+\subsection{PureOS}
+\begin{frame}
+Fait pour \href{https://puri.sm/products/librem-5/}{Librem5}.\newline
+
+\url{https://puri.sm/products/librem-5/pureos-mobile/}
+\end{frame}
+
+\subsection{LineageOS}
+\begin{frame}
+- Théorie avec microG
+\end{frame}
+\subsection{MicoG}
+\begin{frame}
+- Avantage du contrôle accès applications
+- Démo
+\end{frame}
+
+\end{document}
