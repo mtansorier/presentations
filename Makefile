@@ -5,6 +5,8 @@ Logiciel_Libre: Logiciel_Libre.pdf
 
 Yocto-RapsberryPi-devtool-Ansible: Yocto-RapsberryPi-devtool-Ansible.pdf
 
+Alternative_pour_Android: Alternative_pour_Android.pdf
+
 all: $(PRESENTATIONS)
 
 %.pdf: %.tex
