@@ -7,6 +7,8 @@ Yocto-RapsberryPi-devtool-Ansible: Yocto-RapsberryPi-devtool-Ansible.pdf
 
 Alternative_pour_Android: Alternative_pour_Android.pdf
 
+Formation_fitImage: Formation_fitImage.pdf
+
 all: $(PRESENTATIONS)
 
 %.pdf: %.tex
