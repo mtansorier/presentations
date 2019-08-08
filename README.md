@@ -71,4 +71,5 @@ Liens Utiles
 ============
 
 Thèmes complets de présentation:
-[http://mcclinews.free.fr/latex/beamergalerie/completsgalerie.html]
+<https://hartwork.org/beamer-theme-matrix/>
+<http://mcclinews.free.fr/latex/beamergalerie/completsgalerie.html>
