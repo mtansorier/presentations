@@ -4,7 +4,7 @@ Pésentations
 1. L'alternative Logiciel Libre
 2. Yocto - devtool - Ansible: La dernière recette de ma grand-mère
 3. Alternative pour Android
-4. Formation fitImage - Introduction
+4. Prentation fitImage - Introduction
 
 
 L'alternative Logiciel Libre
@@ -38,11 +38,11 @@ _Atelier dans le cadre des [Café Vie Privée](http://cafevieprivee-nantes.fr/) 
 
 Nom du projet à compiler: **Alternative_pour_Android**
 
-Formatino fitImage - Introduction
+Presentation fitImage - Introduction
 ---------------------------------
-_Formation présentant l'utilisation et le fonctionnement de fitImage. Comment signer les images présentes dans une fitImage. Comment l'adapter dans buildroot._
+_Présentation de retour d'expérience de l'utilisation et du fonctionnement du format fitImage. Comment signer les images présentes dans une fitImage. Comment l'adapter dans buildroot._
 
-Nom du projet à compiler: **Formation_fitImage**
+Nom du projet à compiler: **Presentation_fitImage**
 
 Compilation
 ===========
