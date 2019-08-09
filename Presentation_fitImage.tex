@@ -90,7 +90,7 @@
 
 \author[Mickaël Tansorier]{Mickaël Tansorier}
 
-\date[Août 2018]{Retours d'expérience sur le fonctionnement des fitImage et \newline de la signatures des images incluses}
+\date[Août 2018]{Retour d'expérience sur le fonctionnement des fitImage et \newline de la signatures des images incluses}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
@@ -123,25 +123,25 @@
 \end{frame}
 
 \begin{frame}
-\begin{itemize}
-	\item \textbf{Image}: image générique binaire
-	\item \textbf{zImage}: image générique binaire compressé
-	\item \textbf{uImage}: image avec une entête d'information utilisé par U-Boot
-	\item \textbf{fitImage}: enveloppe d'image pouvant contenir plusieurs noyaux, devicetree, firmware. Chaque image peut être signé, et d'autres choses
-\end{itemize}
+\begin{description}
+	\item[Image] Image générique binaire
+	\item[zImage] Image générique binaire compressé
+	\item[uImage] Image avec une entête d'information utilisé par U-Boot
+	\item[fitImage] Enveloppe d'image pouvant contenir plusieurs noyaux, devicetree, firmware. Chaque image peut être signé, et d'autres choses
+\end{description}
 \end{frame}
 
 \begin{frame}{En détails}
 \begin{itemize}
-	\item zImage:
+	\item [zImage]
 	\begin{itemize}
 	 	\item Sujet à la corruption de donnée silencieuse, ce qui peut passer inaperçu
 	 	\item Contient seulement une image
 	 	\item Utilisation répandue
 	\end{itemize}
- 	\item uImage:
+	\item [uImage]
 	\begin{itemize}
-	 	\item somme de contrôle CRC32 faible
+		\item Somme de contrôle CRC32 faible
 	 	\item Contient seulement une image
 	 	\item Utilisation répandue
 	\end{itemize}
@@ -150,7 +150,7 @@
 
 \begin{frame}{En détails}
 \begin{itemize}
- 	\item fitImage
+	\item[fitImage]
 	\begin{itemize}
 	 	\item Somme de contrôle configurable
 	 	\item Peut être signé
@@ -185,7 +185,7 @@
 
 
 % *******************************
-% ****     Construction      ****
+% **** Construction fitImage ****
 % *******************************
 
 \section{Construire fitImage}
@@ -196,68 +196,16 @@
 \end{center}
 \end{frame}
 
-\subsection{Descripteur fitImage}
-
-\begin{frame}[fragile]
-% Prevent first column disapear
-\begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
-KERNEL=/path/to/zImage
-KEYNAME=my_key
-\end{lstlisting}
-\begin{columns}
-\begin{column}{0.5\textwidth}
-\texttt{fitImage.its}
-\begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
-/dts-v1/;
-
-/ {
-	description = "fitImage for sign Kernel image and DTB";
-	#address-cells = <1>;
-
-	images {
-		kernel@1 {
-			description = "Linux Kenel";
-			data = /incbin/("%KERNEL%");
-			type = "kernel";
-			arch = "arm";
-			os = "linux";
-			compression = "none";
-			load = <0x12000000>;
-			entry = <0x12000000>;
-			signature@1 {
-				algo = "sha256,rsa4096";
-				key-name-hint = "%KEYNAME%";
-			};
-		};
-\end{lstlisting}
-\end{column}
-\begin{column}{0.5\textwidth}  
-\begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
-		fdt@1 {
-			description = "Devicetree";
-			data = /incbin/("%DTB%");
-			type = "flat_dt";
-			arch = "arm";
-			compression = "none";
-			load = <0x18000000>;
-			entry = <0x18000000>;
-			signature@1 {
-				algo = "sha256,rsa4096";
-				key-name-hint = "%KEYNAME%";
-			};
-		};
-	};
-	configurations {
-		default = "conf@1";
-		conf@1 {
-			kernel = "kernel@1";
-			fdt = "fdt@1";
-		};
-	};
-};
-\end{lstlisting}
-\end{column}
-\end{columns}
+\begin{frame}
+Étapes:
+\begin{center}
+\begin{itemize}
+	\item Générer une paire de clé (ex: avec openssl)
+	\item Choisir son algo de signature
+	\item Créer un descripteur \texttt{fitImage.its}
+	\item Signer avec \texttt{mkimage}
+\end{itemize}
+\end{center}
 \end{frame}
 
 % **** Type de signature ****
@@ -266,13 +214,13 @@ KEYNAME=my_key
 
 \begin{frame}
 \begin{center}
-\huge{Comment choisir son algo ?}
+\large{Comment choisir son algo de signature ?}
 \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
 Avant novembre 2016:
-Plusieurs type de signature sont disponible dans uboot.\newline
+Plusieurs type de signature sont disponible dans U-Boot.\newline
 \texttt{common/image-sig.c}
 \begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
 struct image_sig_algo image_sig_algos[] = {
@@ -357,27 +305,142 @@ struct crypto_algo crypto_algos[] = {
 \end{lstlisting}
 \end{multicols}
 }
-
 \end{frame}
 
+%**** Descripteur de fitImage *****
 
-% **** Ajouter les clés dans uboot ****
-
-\subsection{Ajouter les clés dans Uboot}
+\subsection{Descripteur fitImage}
 
 \begin{frame}
 \begin{center}
-\large{Ajouter les clés dans Uboot}
+\large{Créer un descripteur de contenue de fitImage}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+% Prevent first column disapear
+\begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
+KERNEL=/path/to/zImage
+KEYNAME=my_key
+\end{lstlisting}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\texttt{fitImage.its}
+\begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
+/dts-v1/;
+
+/ {
+	description = "fitImage for sign Kernel image and DTB";
+	#address-cells = <1>;
+
+	images {
+		kernel@1 {
+			description = "Linux Kenel";
+			data = /incbin/("%KERNEL%");
+			type = "kernel";
+			arch = "arm";
+			os = "linux";
+			compression = "none";
+			load = <0x12000000>;
+			entry = <0x12000000>;
+			signature@1 {
+				algo = "sha256,rsa4096";
+				key-name-hint = "%KEYNAME%";
+			};
+		};
+\end{lstlisting}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
+		fdt@1 {
+			description = "Devicetree";
+			data = /incbin/("%DTB%");
+			type = "flat_dt";
+			arch = "arm";
+			compression = "none";
+			load = <0x18000000>;
+			entry = <0x18000000>;
+			signature@1 {
+				algo = "sha256,rsa4096";
+				key-name-hint = "%KEYNAME%";
+			};
+		};
+	};
+	configurations {
+		default = "conf@1";
+		conf@1 {
+			kernel = "kernel@1";
+			fdt = "fdt@1";
+		};
+	};
+};
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+% **** Signer les images ****
+
+\subsection{Signer les images}
+
+\begin{frame}
+\begin{center}
+\large{Signer les images avec \texttt{mkimage}}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+Il faut l'ajouter avec \texttt{mkimage}:
+\begin{description}
+\item[-D <dtc options>] Fournie les option du compilateur de device tree utilisé pour créer l'image.
+\item[-k <key\_directory>] Spécifie le répertoire contenant les clés pour signer. Il doit contenir la clé privé <name>.key et le certificat <name>.cert (contenant la clé public) utilisé pour la vérification.
+\item[-K <key\_destination>] Spécifie le binaire compilier du device tree (.dtb) où écrire la clé public.
+\item[-r] Spécifie la fitImage.
+\end{description}
+\end{frame}
+
+\begin{frame}[fragile]
+Pour signer:
+\begin{lstlisting}[style=shell]
+$ mkimage -D "-I dts -O dtb -p 4096" -f /path/to/fitImage.its -K /path/to/u-boot_pubkey.dtb -k /path/to/ -r fitImage
+\end{lstlisting}
+Cette opération doit être effectué avant la compilation d'\texttt{U-Boot}, car cette même commande permet d'inculer les clés public dans le dtb.
+\vfill
+l'option \texttt{-D "-I dts -O dtb -p 4096"} sera explique après.
+\end{frame}
+
+
+% **************************************
+% **** Ajouter les clés dans U-Boot ****
+% **************************************
+
+\section{Ajouter les clés dans U-Boot}
+
+\begin{frame}
+\begin{center}
+\huge{Ajouter les clés dans U-Boot}
 \end{center}
 \end{frame}
 
 \begin{frame}
+Étapes:
 \begin{center}
 \begin{itemize}
-	\item Générer une paire de clé (ex: avec openssl)
+	\item Créer un \texttt{external dtb}
 	\item Ajouter les clé à un \texttt{external dtb}
 	\item Ajouter l'\texttt{external dtb} à la compilation d'Uboot
 \end{itemize}
+\end{center}
+\end{frame}
+
+%**** Créer un external dtb ****
+
+\subsection{Créer un \texttt{external dtb}}
+
+\begin{frame}
+\begin{center}
+\large{Créer un \texttt{external dtb}}
 \end{center}
 \end{frame}
 
@@ -414,10 +477,20 @@ vendor,board signature key-my_key image sha256,rsa4096 my_key modelcompatiblereq
 \end{lstlisting}
 \end{frame}
 
+%**** Ajouter les clés à l'external dtb ****
+
+\subsection{Ajouter les clés à l'\texttt{external dtb}}
+
+\begin{frame}
+\begin{center}
+\large{Ajouter les clés à l'\texttt{external dtb}}
+\end{center}
+\end{frame}
+
 \begin{frame}[fragile]
-Pour y ajouter la clé public:
+Pour y ajouter la clé public il faut utiliser la commande de création de fitImage:
 \begin{lstlisting}[style=shell]
-$ mkimage -D "-I dts -O dtb -p 4096" -f $(@D)/fitImage.its -K $(@D)/u-boot_pubkey.dtb -k $(@D) -r fitImage
+$ mkimage -D "-I dts -O dtb -p 4096" -f /path/to/fitImage.its -K /path/to/u-boot_pubkey.dtb -k /path/to/ -r fitImage
 \end{lstlisting}
 Ce qui donne:
 \begin{lstlisting}[style=shell]
@@ -428,29 +501,65 @@ image sha256,rsa4096 my_key modelcompatiblerequiredalgokey-name-hintrsa,num-bitr
 \end{lstlisting}     
 \end{frame}
 
+%**** Ajouter l'external dtb à la compilation d'U-Boot ****
+
+\subsection{Ajouter l'\texttt{external dtb} à la compilation d'U-Boot}
+
+\begin{frame}
+\begin{center}
+\large{Ajouter l'\texttt{external dtb} à la compilation d'U-Boot}
+\end{center}
+\end{frame}
+
 \begin{frame}[fragile]
-Pour s'assurer que le devicetree contenant la clé public soit dans dans le binaire u-boot, il faut que cette option soit à non:
-\begin{lstlisting}[style=shell]
-BR2_TARGET_UBOOT_USE_CUSTOM_CONFIG
-\end{lstlisting}
-Pour ajouter ce DTB spécifique dans U-boot (même s'il n'y a pas de dtb) il faut utiliser l'option \texttt{EXT\_DTB} de make:
+Pour ajouter ce DTB spécifique dans U-Boot (même s'il n'y a pas de dtb) il faut utiliser l'option \texttt{EXT\_DTB} de make:
 \begin{lstlisting}[style=shell]
 $ make CROSS_COMPILE=arm-linux-gnueabihf- EXT_DTB=u-boot_pubkey.dtb
 \end{lstlisting}
 \end{frame}
 
-% **** Signer l'image noyau ****
+%**** Log de boot ****
 
-\subsection{Signer l'image noyau}
+\subsection{Log de boot}
+
+\begin{frame}
+\begin{center}
+\large{Log de boot}
+\end{center}
+\end{frame}
 
 \begin{frame}[fragile]
-Ok maintenant il faut signer le noyau linux.\newline
-\newline
-Il faut le signer avant de compiler U-boot puisque pour ajouter la clé public au devicetree il faut executer mkimge avec en entrée l'\texttt{its} et en sortier le fitImage:
-\begin{lstlisting}[style=shell]
-$ mkimage -D "-I dts -O dtb -p 4096" -f $(@D)/fitImage.its -K $(@D)/u-boot_pubkey.dtb -k $(@D) -r fitImage
+\begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
+=> bootm 0x15000000 #or bootm 0x15000000#conf@1 since conf@1 is the default
+## Loading kernel from FIT Image at 15000000 ...
+   Using'conf@1'configuration
+   Verifying Hash Integrity ... OK
+   Trying'kernel@1'kernel subimage
+     Description:  Linux kernel
+     Type:         Kernel Image
+     Compression:  uncompressed
+     Data Start:   0x150000e4
+     Data Size:    7010496 Bytes=6.7 MiB
+     Architecture: ARM
+     OS:           Linux
+     Load Address: 0x12000000
+     Entry Point:  0x12000000
+     Hash algo:    sha256
+     Hash value:   7d1fb52f2b8d1a98d555e01bc34d11550304fc26
+     Sign algo:    sha256,rsa4096:my_key
+     Sign value:   [redacted]
+   Verifying Hash Integrity ... sha256,rsa4096:my_key+ sha256+ OK
+## Loading fdt from FIT Image at 15000000 ...
+   Using 'conf@1' configuration
+   Trying 'fdt@1' fdt subimage
+[...]
+   Verifying Hash Integrity ... sha256,rsa4096:my_key+ sha256+ OK
+   Booting using the fdt blob at 0x156afd40
+   Loading Kernel Image ... OK
+   Loading Device Tree to 1fff2000, end 1ffff1ed ... OK
+
+Starting kernel...
 \end{lstlisting}
-Dans BR le noyau Linux est bien construit avant U-boot, donc pas besoin d'ajouter de dépendance.
 \end{frame}
 
 
@@ -497,6 +606,15 @@ Dans BR le noyau Linux est bien construit avant U-boot, donc pas besoin d'ajoute
 \begin{center}
 \huge{Gestion dans Buildroot}
 \end{center}
+\end{frame}
+
+\begin{frame}
+Étapes:
+\begin{itemize}
+\item Rendre automatique la récupération des clés et la completion des descriteurs (\texttt{.its}, \texttt{.dtb}).
+\item Ajouter les clés à l'\texttt{external dtb} pour compiler U-Boot.
+\item Signer les images contenue dans la fitImage.
+\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -598,6 +716,8 @@ Dans BR le noyau Linux est bien construit avant U-boot, donc pas besoin d'ajoute
 % *******************************
 \section*{Conclusion}
 
+\subsection{Documentation}
+
 \begin{frame}[fragile]
 Documentation:
 \begin{itemize}
@@ -607,10 +727,12 @@ Documentation:
 \end{itemize}
 \end{frame}
 
+\subsection{Questions}
+
 \begin{frame}
 \begin{center}
 \begin{huge}
-Des question ?
+Des questions ?
 \end{huge}
 \end{center}
 \begin{center}
