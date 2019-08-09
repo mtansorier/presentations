@@ -1,5 +1,6 @@
-PRESENTATIONS = Logiciel_Libre
-PRESENTATIONS_PDF = $(addsuffix .pdf,$(PRESENTATIONS))
+PRESENTATIONS = Logiciel_Libre Yocto-RapsberryPi-devtool-Ansible Alternative_pour_Android Presentation_fitImage
+
+# Individual project
 
 Logiciel_Libre: Logiciel_Libre.pdf
 
@@ -9,7 +10,9 @@ Alternative_pour_Android: Alternative_pour_Android.pdf
 
 Presentation_fitImage: Presentation_fitImage.pdf
 
-all: $(PRESENTATIONS)
+# Commun project
+
+all: $(addsuffix .pdf,$(PRESENTATIONS))
 
 %.pdf: %.tex
 	pdflatex $<
@@ -17,5 +20,5 @@ all: $(PRESENTATIONS)
 clean: $(addprefix clean-,$(PRESENTATIONS))
 
 clean-%:  
-	rm -f $*.{aux,nav,pdf,log,out,snm,toc}
+	rm -f $*.{aux,nav,vrb,log,out,snm,toc}
 

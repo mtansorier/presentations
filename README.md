@@ -49,7 +49,7 @@ Compilation
 
 Pour construire tout les projets
 ```bash
-$ make
+$ make all
 ```
 
 Pour construire un projet
@@ -66,6 +66,8 @@ Pour supprimer un projet
 ```bash
 $ make clean-<projet>
 ```
+
+_Note: To force second compilation, use `--always-make` option_
 
 Liens Utiles
 ============
