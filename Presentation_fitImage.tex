@@ -86,11 +86,11 @@
 \usepackage{hyperref}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title[U-Boot]{Présentation fitImage \\ \textbf{Introduction}}
+\title[U-Boot]{Présentation \texttt{fitImage} \\ \textbf{Introduction}}
 
 \author[Mickaël Tansorier]{Mickaël Tansorier}
 
-\date[Août 2018]{Retour d'expérience sur le fonctionnement des fitImage et \newline de la signatures des images incluses}
+\date[Août 2018]{Retour d'expérience sur le fonctionnement des \texttt{fitImage} et \newline de la signatures des images incluses}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
@@ -124,22 +124,22 @@
 
 \begin{frame}
 \begin{description}
-	\item[Image] Image générique binaire
-	\item[zImage] Image générique binaire compressé
-	\item[uImage] Image avec une entête d'information utilisé par U-Boot
-	\item[fitImage] Enveloppe d'image pouvant contenir plusieurs noyaux, devicetree, firmware. Chaque image peut être signé, et d'autres choses
+	\item[\texttt{Image}] Image générique binaire
+	\item[\texttt{zImage}] Image générique binaire compressé
+	\item[\texttt{uImage}] Image avec une entête d'information utilisé par U-Boot
+	\item[\texttt{fitImage}] Enveloppe d'image pouvant contenir plusieurs noyaux, devicetree, firmware. Chaque image peut être signé, et d'autres choses
 \end{description}
 \end{frame}
 
 \begin{frame}{En détails}
 \begin{itemize}
-	\item [zImage]
+	\item [\texttt{zImage}]
 	\begin{itemize}
 	 	\item Sujet à la corruption de donnée silencieuse, ce qui peut passer inaperçu
 	 	\item Contient seulement une image
 	 	\item Utilisation répandue
 	\end{itemize}
-	\item [uImage]
+	\item [\texttt{uImage}]
 	\begin{itemize}
 		\item Somme de contrôle CRC32 faible
 	 	\item Contient seulement une image
@@ -150,7 +150,7 @@
 
 \begin{frame}{En détails}
 \begin{itemize}
-	\item[fitImage]
+	\item[\texttt{fitImage}]
 	\begin{itemize}
 	 	\item Somme de contrôle configurable
 	 	\item Peut être signé
@@ -220,7 +220,7 @@
 
 \begin{frame}[fragile]
 Avant novembre 2016:
-Plusieurs type de signature sont disponible dans U-Boot.\newline
+Plusieurs types de signature sont disponible dans U-Boot.\newline
 \texttt{common/image-sig.c}
 \begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
 struct image_sig_algo image_sig_algos[] = {
@@ -309,11 +309,11 @@ struct crypto_algo crypto_algos[] = {
 
 %**** Descripteur de fitImage *****
 
-\subsection{Descripteur fitImage}
+\subsection{Descripteur \texttt{fitImage}}
 
 \begin{frame}
 \begin{center}
-\large{Créer un descripteur de contenue de fitImage}
+\large{Créer un descripteur de contenue de \texttt{fitImage}}
 \end{center}
 \end{frame}
 
@@ -393,10 +393,10 @@ KEYNAME=my_key
 \begin{frame}[fragile]
 Il faut l'ajouter avec \texttt{mkimage}:
 \begin{description}
-\item[-D <dtc options>] Fournie les option du compilateur de device tree utilisé pour créer l'image.
+\item[-D <dtc options>] Fournie les options du compilateur de device tree utilisé pour créer l'image.
 \item[-k <key\_directory>] Spécifie le répertoire contenant les clés pour signer. Il doit contenir la clé privé <name>.key et le certificat <name>.cert (contenant la clé public) utilisé pour la vérification.
 \item[-K <key\_destination>] Spécifie le binaire compilier du device tree (.dtb) où écrire la clé public.
-\item[-r] Spécifie la fitImage.
+\item[-r] Spécifie la \texttt{fitImage}.
 \end{description}
 \end{frame}
 
@@ -405,21 +405,21 @@ Pour signer:
 \begin{lstlisting}[style=shell]
 $ mkimage -D "-I dts -O dtb -p 4096" -f /path/to/fitImage.its -K /path/to/u-boot_pubkey.dtb -k /path/to/ -r fitImage
 \end{lstlisting}
-Cette opération doit être effectué avant la compilation d'\texttt{U-Boot}, car cette même commande permet d'inculer les clés public dans le dtb.
+Cette opération doit être effectué avant la compilation d'\texttt{U-Boot}, car cette même commande permet d'inclure la clé public dans le dtb.
 \vfill
 l'option \texttt{-D "-I dts -O dtb -p 4096"} sera explique après.
 \end{frame}
 
 
 % **************************************
-% **** Ajouter les clés dans U-Boot ****
+% **** Ajouter la clé dans U-Boot ****
 % **************************************
 
-\section{Ajouter les clés dans U-Boot}
+\section{Ajouter la clé dans U-Boot}
 
 \begin{frame}
 \begin{center}
-\huge{Ajouter les clés dans U-Boot}
+\huge{Ajouter la clé dans U-Boot}
 \end{center}
 \end{frame}
 
@@ -428,7 +428,7 @@ l'option \texttt{-D "-I dts -O dtb -p 4096"} sera explique après.
 \begin{center}
 \begin{itemize}
 	\item Créer un \texttt{external dtb}
-	\item Ajouter les clé à un \texttt{external dtb}
+	\item Ajouter la clé à un \texttt{external dtb}
 	\item Ajouter l'\texttt{external dtb} à la compilation d'Uboot
 \end{itemize}
 \end{center}
@@ -477,18 +477,18 @@ vendor,board signature key-my_key image sha256,rsa4096 my_key modelcompatiblereq
 \end{lstlisting}
 \end{frame}
 
-%**** Ajouter les clés à l'external dtb ****
+%**** Ajouter la clé à l'external dtb ****
 
-\subsection{Ajouter les clés à l'\texttt{external dtb}}
+\subsection{Ajouter la clé à l'\texttt{external dtb}}
 
 \begin{frame}
 \begin{center}
-\large{Ajouter les clés à l'\texttt{external dtb}}
+\large{Ajouter la clé à l'\texttt{external dtb}}
 \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
-Pour y ajouter la clé public il faut utiliser la commande de création de fitImage:
+Pour y ajouter la clé public il faut utiliser la commande de création de \texttt{fitImage}:
 \begin{lstlisting}[style=shell]
 $ mkimage -D "-I dts -O dtb -p 4096" -f /path/to/fitImage.its -K /path/to/u-boot_pubkey.dtb -k /path/to/ -r fitImage
 \end{lstlisting}
@@ -518,13 +518,13 @@ $ make CROSS_COMPILE=arm-linux-gnueabihf- EXT_DTB=u-boot_pubkey.dtb
 \end{lstlisting}
 \end{frame}
 
-%**** Log de boot ****
+%**** Exemple: logs U-Boot ****
 
-\subsection{Log de boot}
+\subsection{Exemple: logs U-Boot}
 
 \begin{frame}
 \begin{center}
-\large{Log de boot}
+\large{Exemple: logs U-boot}
 \end{center}
 \end{frame}
 
@@ -611,9 +611,9 @@ Starting kernel...
 \begin{frame}
 Étapes:
 \begin{itemize}
-\item Rendre automatique la récupération des clés et la completion des descriteurs (\texttt{.its}, \texttt{.dtb}).
-\item Ajouter les clés à l'\texttt{external dtb} pour compiler U-Boot.
-\item Signer les images contenue dans la fitImage.
+\item Rendre automatique la récupération des clés et la completion des descripteurs (\texttt{.its}, \texttt{.dtb}).
+\item Ajouter la clé à l'\texttt{external dtb} pour compiler U-Boot.
+\item Signer les images contenues dans la \texttt{fitImage}.
 \end{itemize}
 \end{frame}
 
