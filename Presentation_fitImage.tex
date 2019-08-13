@@ -136,14 +136,14 @@
 	\item [\texttt{zImage}]
 	\begin{itemize}
 		\item Sujet à la corruption de donnée, ce qui peut passer inaperçu
-	 	\item Contient seulement une image
-	 	\item Utilisation répandue
+		\item Contient seulement une image
+		\item Utilisation répandue
 	\end{itemize}
 	\item [\texttt{uImage}]
 	\begin{itemize}
 		\item Somme de contrôle CRC32 faible
-	 	\item Contient seulement une image
-	 	\item Utilisation répandue
+		\item Contient seulement une image
+		\item Utilisation répandue
 	\end{itemize}
 \end{itemize}
 \end{frame}
@@ -152,18 +152,18 @@
 \begin{itemize}
 	\item[\texttt{fitImage}]
 	\begin{itemize}
-	 	\item Somme de contrôle configurable
-	 	\item Peut être signé
-	 	\item Peut contenir de multibles images (kernel, DTB, firmware. . . )
-	 	\item N'est pas beaucoup utilisé
- 		\item Est le successeur de uImage
-	 	\item Le descritpteur de contenue est basé sur un DTS
-	 	\item Peut contenir de multiples configurations
-	 	\item De nouvelles fonctionnalités d'image peuvent être ajoutées au besoin
-	 	\item Supporte de fort checksums (SHA1, SHA256. . . ), Ce qui protège des corruptions silecieuse
-	 	\item U-Boot peut vérifier le fitImage avec une clé public, ce qui protège contre la falsification
-	 	\item Le système de contruction de Linux ne permet pas de générer une fitImage
-	 	\item Yocto peut maintenant générer une fitImage
+		\item Somme de contrôle configurable
+		\item Peut être signé
+		\item Peut contenir de multibles images (kernel, DTB, firmware. . . )
+		\item N'est pas beaucoup utilisé
+		\item Est le successeur de uImage
+		\item Le descritpteur de contenue est basé sur un DTS
+		\item Peut contenir de multiples configurations
+		\item De nouvelles fonctionnalités d'image peuvent être ajoutées au besoin
+		\item Supporte de fort checksums (SHA1, SHA256. . . ), Ce qui protège des corruptions silecieuse
+		\item U-Boot peut vérifier le fitImage avec une clé public, ce qui protège contre la falsification
+		\item Le système de contruction de Linux ne permet pas de générer une fitImage
+		\item Yocto peut maintenant générer une fitImage
 	\end{itemize}
 \end{itemize}
 \end{frame}
