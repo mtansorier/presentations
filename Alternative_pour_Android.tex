@@ -9,16 +9,16 @@
 % https://www.gnu.org/licenses/fdl-1.3.html
 
 % compress option to have horyzontal circle
-\documentclass[compress]{beamer}
+\documentclass[aspectratio=169]{beamer}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Thèmes suppélmentaires
-\useoutertheme[]{miniframes} % barre menu du haut
-\setbeamertemplate{frametitle}[default] % replace le titre à la bonne place
-\useinnertheme[shadow=true]{rounded} % arrondi les angles
-\usecolortheme{orchid}
-\usecolortheme{whale}
+% Thèmes
+\usetheme{Darmstadt}
+
+% Redéfini la couleur de base du document
+\definecolor{cvp}{RGB}{179,0,161}
+\setbeamercolor*{structure}{fg=cvp}
 
 % Language
 \usepackage[french]{babel}
@@ -28,10 +28,11 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title[U-Boot]{Café Vie Privée \\ \textbf{Alternative pour Android}}
+\titlegraphic{\includegraphics[width=.5\textwidth]{logos/CVP-Nantes.png}}
 
 \author[Café Vie Privée]{Café Vie Privée}
 
-\date[Août 2018]{Présentation d'outils libres pour se protéger sur Android}
+\date[Août 2018]{\textit{Présentation d'outils libres pour se protéger sur Android}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Pour enregistrer l'écran
@@ -49,6 +50,8 @@
 \titlepage
 \end{frame}
 
+% Ajout le logo sur les diapos après la page de garde
+\logo{\includegraphics[width=.20\textwidth]{logos/CVP-Nantes.png}}
 
 % *******************************
 % ****      INTRODUCTION     ****
@@ -60,13 +63,19 @@
 
 \section{Pourquoi se protéger ?}
 
+\begin{frame}
+\begin{center}
+\huge{\color{cvp}{Pourquoi se protéger ?}}
+\end{center}
+\end{frame}
+
 \subsection{Qu'est-ce que Android}
 
 \begin{frame}{}
 \begin{block}{Wikipedia}
 	\emph{\href{https://fr.wikipedia.org/wiki/Android}{Android}} est un système d'exploitation mobile fondé sur le noyau Linux et développé actuellement par Google.
 \end{block}
-Android à été lancé en 2017.\newline
+Android à été lancé en 2007.\newline
 Le code est sous \emph{licence apache (ASL)}. Il peut donc être intégré dans des applications propriétaires.
 \end{frame}
 
@@ -77,34 +86,47 @@ On peut le trouver sur
 	\item Tablette
 	\item Télévision
 	\item Livre électronique (ex: chomebook)
-	\item Montres
-	\item Voitures
+	\item Montre
+	\item Voiture
 	\item …
 \end{itemize}
-Il possède plus de 80\% de part de marché (en 2015) 
+Il possède plus de 80\% de part de marché des smartphone (en 2015).
 \end{frame}
 
 \subsection{Économie de la surveillance}
+
+\begin{frame}
+\begin{center}
+\large{\color{cvp}{Économie de la surveillance}}
+\end{center}
+\end{frame}
+
 \begin{frame}{Les Publicitaires}
-Les applications dépendes d'un model économique, qui souvent est dépendant des publicitaires.\newline
+Les applications dépendent d'un model économique, qui souvent est dépendant des publicitaires.\newline
 \newline
 Pour cela ils utilisent des \texttt{pisteurs}.
 \end{frame}
 
 \begin{frame}{Exodus Privacy}
 \begin{block}{Exodus Privacy}
-Elle développe une plate-forme d'analyse des applications Android qui liste les traqueurs qui y sont présents.
+Est une plate-forme d'analyse des applications Android qui liste les traqueurs et les autorisations de celles-ci.
 \end{block}
 Créer en 2017.\newline
-\end{frame}
-
-\begin{frame}
-Permet de connaitre les autorisations et les pisteurs de chaque applications.
+\newline
+\newline
+\textcolor{gray}{\tiny{(ClassyShark3xodus le fait pour les apk de F-droid)}}
 \end{frame}
 
 \subsection{Programme de surveillance}
+
+\begin{frame}
+\begin{center}
+\large{\color{cvp}{Programme de surveillance}}
+\end{center}
+\end{frame}
+
 \begin{frame}{Les enjeux}
-Il existe de nombreux programme de surveillance plus ou moins connus.
+Il existe de nombreux programmes de surveillance plus ou moins connus.
 \begin{block}{Jérémy Zimmermamn}
 Ne pas confondre entre: j'ai rien à me reprocher et j'ai rien à cacher.
 \end{block}
@@ -112,7 +134,7 @@ Cf. Lo documentaire Notiong To Hide
 \end{frame}
 
 \begin{frame}{}
-Refusez les programmes de surveillance des données comme PRISM, XKeyscore et Tempora.
+Refuser les programmes de surveillance des données comme PRISM, XKeyscore et Tempora.
 % PRISM: Progamme de surveillanc américan. Collecte les données sur internet.
 %	https://fr.wikipedia.org/wiki/PRISM_(programme_de_surveillance)
 % XKeyscore: Programme de surveillance créer par la NSA. Collecte quasi systématique des activités de tout utilisateur sur Internet.
@@ -122,12 +144,12 @@ Refusez les programmes de surveillance des données comme PRISM, XKeyscore et Te
 
 \begin{tiny}
 \begin{block}{PRISM}
-Progamme de surveillanc américan créer par la NSA. Collecte les données sur internet.
+Progamme de surveillance américan créer par la NSA. Collecte les données sur internet.
 Edward Snowden a dénoncé ce programme en juin 2013.
 \end{block}
 
 \begin{block}{XKeyscore}
-Programme de surveillance créer par la NSA. Collecte quasi systématique des activités de tout utilisateur sur Internet. Révélé en juillet 2013.
+Programme de surveillance créé par la NSA. Collecte quasi systématique des activités de tout utilisateur sur Internet. Révélé en juillet 2013.
 \end{block}
 
 \begin{block}{Tempora}
@@ -137,42 +159,59 @@ Programme britanique permettant d'intercepter les données transitant par les c�
 \end{frame}
 
 \begin{frame}{Contre attaque}
-Il existe des pages pour se défendre contre ça:
-\url{https://prism-break.org/fr/categories/android/}
-
+Il existe des projet pour se défendre contre ça:
+\url{https://prism-break.org/fr/categories/android/}\newline
+\newline
 On y reviendra :)
 \end{frame}
 
 \subsection{La surveillance de masse}
 
-\begin{frame}{Les puissants}
-Nos environnements informatique utilisent des \textbf{logiciels propriétaires}, et pour la plupart détenue par quelques uns qui ont un poids important dans notre société. \newline
+\begin{frame}
+\begin{center}
+\large{\color{cvp}{La surveillance de masse}}
+\end{center}
+\end{frame}
+
+\begin{frame}{Les puissants - la centralisation}
+Nos environnements informatiques utilisent des \textbf{logiciels propriétaires},\newline
+et pour la plupart détenue par quelques uns qui ont un \textbf{poids important} dans notre société. \newline
 \newline
 D'où la création du terme \textbf{GAFAM}: Google Apple Facebook Amazon Microsoft
 \end{frame}
 
 \begin{frame}{Les besoins}
-Accerder au code source permet d'auditer le code et vérifier que le logiciel corresponde à ce pourquoi il est fait. \newline
+Accéder au code source permet d'\textbf{auditer} le code et vérifier que le logiciel correspond à ce pourquoi il est fait. \newline
 \newline
-Le logiciel libre permet de modifier le code pour nos besoins personnel.
+Le logiciel libre permet de \textbf{modifier} le code pour nos besoins personnels.\newline
+\newline
+Ainsi que la \textbf{décentralisation}.
 \end{frame}
 
 
 % *******************************
-% ****  COMMENT SE PROTEGER  ****
+% ****  COMMENT SE PROTEGER  ****
 % *******************************
 
 \section{Comment se protéger ?}
 
 \begin{frame}
-Utiliser du logiciel Libre.\newline
-Il permet d'auditer le code source.\newline
-Il permet de l'adapter pour soit même.\newline
-Donc il ne dépend pas d'un modèle économique particulier.
+\begin{center}
+\huge{\color{cvp}{Comment se protéger ?}}
+\end{center}
 \end{frame}
 
-\subsection{Quels logiciel ?}
 \begin{frame}
+En utilisant du logiciel Libre.\newline
+On se permet d'auditer le code source,\newline
+de l'adapter pour soi même.\newline
+Donc il ne \textbf{dépend pas} d'un \textbf{modèle économique} particulier.
+\end{frame}
+
+\subsection{Avec quels logiciels ?}
+
+\begin{frame}
+On va voir quelques exemples:\newline
 \begin{itemize}
 	\item Magasin d'applications
 	\item Navigation
@@ -186,64 +225,81 @@ Donc il ne dépend pas d'un modèle économique particulier.
 
 
 % *******************************
-% ****   LES APPLICATIONS    ****
+% ****   LES APPLICATIONS    ****
 % *******************************
 
 \section{Les Applications}
+
+\begin{frame}
+\begin{center}
+\huge{\color{cvp}{Les Applications}}
+\end{center}
+\end{frame}
 
 \subsection{Magasin d'application}
 
 \begin{frame}
 Playstore $\to$ F-Droid\newline
-Playstore $\to$ Yalp store
+Playstore $\to$ Aurora Droid\newline
+\newline
+Playstore $\to$ Yalp store\newline
+Playstore $\to$ Aurora Store
 \end{frame}
 
 \subsection{Navigation}
 \begin{frame}
 Chrome $\to$ Firefox\newline
-Orbot/Orfox\newline
-Duckduckgo
+Google $\to$ Duckduckgo\newline
+\newline
+Tor Browser \textcolor{gray}{\tiny{(anciennement Orfox)}}\newline
+\newline
+Orobot \textcolor{gray}{\tiny{(Proxy pour le réseau Tor)}}
 \end{frame}
 
 \subsection{Réseaux sociaux}
 \begin{frame}
-slim social\newline
-diaspora\newline
-mastodon
+Facebook $\to$ slim social \textcolor{gray}{\tiny{(ou Frost for fackbook)}}\newline
+\newline
+Diaspora\newline
+Mastodon
 \end{frame}
 
 \subsection{Messagerie instantanée}
 \begin{frame}
-Signal\newline
-Silence\newline
-Conversation
+Whatsapp $\to$ Signal\newline
+SMS $\to$ Silence\newline
+Conversation \textcolor{gray}{\tiny{(XMPP)}}
 \end{frame}
 
 \subsection{Cartes}
 \begin{frame}
-Openstreetmaps\newline
-OsmAnd
+OsmAnd \textcolor{gray}{\tiny{(Openstreetmaps)}}
 \end{frame}
 
 \subsection{multimédia}
 \begin{frame}
-Youtube $\to$ newPip\newline
-peertube $\to$ Thoruim
+Youtube $\to$ NewPipe\newline
+Peertube $\to$ Thoruim
 \end{frame}
 
 \subsection{Recheche}
 \begin{frame}
-google $\to$ duckduckgo
+Google $\to$ Duckduckgo
 \end{frame}
 
 \subsection{Divers}
 \begin{frame}
-Clavier: google $\to$ AnySoftKey\newline
-Météo: Votre météo locale\newline
-Caméra: Open Caméra\newline
-Transport: Transportr
+\begin{description}
+	\item[Clavier] Google $\to$ AnySoftKey
+	\item[Météo] Votre météo locale \textcolor{gray}{\tiny{(F-droid)}}
+	\item[Caméra] Open Caméra
+	\item[Transport] Transportr
+	\item[Bloqueur] Blokada
+	\item[Liseure] Book Reader
+	\item[Luminosité] Red Moon
+	\item[Battery] Drowser
+\end{description}
 \end{frame}
-
 
 % *******************************
 % ****     OS ALTERNATIF     ****
@@ -251,9 +307,15 @@ Transport: Transportr
 
 \section{OS Alternatif}
 
+\begin{frame}
+\begin{center}
+\huge{\color{cvp}{OS Alternatif}}
+\end{center}
+\end{frame}
+
 \subsection{État de l'art}
 \begin{frame}
-Il n'existe pas beaucoup d'alternative complètes, car la difficulté est le support matériel du téléphone.
+Il n'existe pas beaucoup d'alternatives complètes, car la difficulté est le support matériel du téléphone.
 
 Exemple:
 \begin{itemize}
@@ -279,7 +341,7 @@ Fait pour \href{https://puri.sm/products/librem-5/}{Librem5}.\newline
 \begin{frame}
 - Théorie avec microG
 \end{frame}
-\subsection{MicoG}
+\subsection{MicroG}
 \begin{frame}
 - Avantage du contrôle accès applications
 - Démo
