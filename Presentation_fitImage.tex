@@ -162,7 +162,7 @@
 		\item De nouvelles fonctionnalités d'image peuvent être ajoutées au besoin
 		\item Supporte de fort checksums (SHA1, SHA256. . . ), Ce qui protège des corruptions silecieuse
 		\item U-Boot peut vérifier le fitImage avec une clé public, ce qui protège contre la falsification
-		\item Le système de contruction de Linux ne permet pas de générer une fitImage
+		\item Le système de construction de Linux ne permet pas de générer une fitImage
 		\item Yocto peut maintenant générer une fitImage
 	\end{itemize}
 \end{itemize}
@@ -322,6 +322,7 @@ struct crypto_algo crypto_algos[] = {
 \begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
 KERNEL=/path/to/zImage
 KEYNAME=my_key
+DTB=/path/to/.dtb
 \end{lstlisting}
 \begin{columns}
 \begin{column}{0.5\textwidth}
