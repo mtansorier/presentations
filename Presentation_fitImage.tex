@@ -519,6 +519,25 @@ $ make CROSS_COMPILE=arm-linux-gnueabihf- EXT_DTB=u-boot_pubkey.dtb
 \end{lstlisting}
 \end{frame}
 
+%**** Vérifier la signature dans à la construction ****
+
+\subsection{Vérifier la signature dans à la construction}
+
+\begin{frame}
+\begin{center}
+\large{Vérifier la signature à la construction}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+il est possible de vérifier la signature d'une image avec :
+\begin{lstlisting}[style=shell]
+$ fit_check_sign -f fitImage -k u-boot_pubkey.dtb
+\end{lstlisting}
+L'outils est disponible dans le paquet uboot-tools dans buildroot:\newline
+\texttt{./output/build/host-uboot-tools-2017.07/tools/fit\_check\_sign}
+\end{frame}
+
 %**** Exemple: logs U-Boot ****
 
 \subsection{Exemple: logs U-Boot}
