@@ -46,6 +46,18 @@ Nom du projet à compiler: **Presentation_fitImage**
 
 Compilation
 ===========
+Prerequis
+---------
+install packages:
+```shell
+texlive
+texlive-latex-extra
+fonts-font-awesome
+texlive-lang-french
+```
+
+Commands
+------
 
 Pour construire tout les projets
 ```bash
