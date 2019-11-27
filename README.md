@@ -50,11 +50,11 @@ Prerequis
 ---------
 install packages:
 ```shell
-texlive
+texlive-core
 texlive-latex-extra
-fonts-font-awesome
 texlive-lang-french
 ```
+Pour utiliser le paquet latex `fontawesome` il faut intaller le paquet système: texlive-fontsextra
 
 Commands
 ------
