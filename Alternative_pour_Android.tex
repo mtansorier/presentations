@@ -26,6 +26,9 @@
 % Pour les hyperliens
 \usepackage{hyperref}
 
+
+% Pour rayer un texte avec \sout{}
+\usepackage{ulem}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title[U-Boot]{Café Vie Privée \\ \textbf{Alternative pour Android}}
 \titlegraphic{\includegraphics[width=.5\textwidth]{logos/CVP-Nantes.png}}
@@ -90,7 +93,24 @@ On peut le trouver sur
 	\item Voiture
 	\item …
 \end{itemize}
-Il possède plus de 80\% de part de marché des smartphone (en 2015).
+Il possède plus de 82\% de part de marché des smartphone (en 2019).
+\end{frame}
+
+\subsection{La surveillance de masse}
+
+\begin{frame}
+\begin{center}
+\large{\color{cvp}{La surveillance de masse}}
+\end{center}
+\end{frame}
+
+\begin{frame}{Les puissants - la centralisation}
+Nos environnements informatiques utilisent des \textbf{logiciels propriétaires},\newline
+et pour la plupart détenue par quelques uns qui ont un \textbf{poids important} dans notre société. \newline
+\newline
+D'où la création du terme \textbf{GAFAM}: Google Apple Facebook Amazon Microsoft\newline
+\newline
+\textcolor{gray}{\tiny{\sout{GAFAM} $\to$ les vampires de données}}
 \end{frame}
 
 \subsection{Économie de la surveillance}
@@ -114,7 +134,7 @@ Est une plate-forme d'analyse des applications Android qui liste les traqueurs e
 Créer en 2017.\newline
 \newline
 \newline
-\textcolor{gray}{\tiny{(ClassyShark3xodus le fait pour les apk de F-droid)}}
+\textcolor{gray}{\tiny{(ClassyShark3xodus le fait pour d'autres apk du système)}}
 \end{frame}
 
 \subsection{Programme de surveillance}
@@ -130,7 +150,7 @@ Il existe de nombreux programmes de surveillance plus ou moins connus.
 \begin{block}{Jérémy Zimmermamn}
 Ne pas confondre entre: j'ai rien à me reprocher et j'ai rien à cacher.
 \end{block}
-Cf. Lo documentaire Notiong To Hide
+Cf. Le documentaire Notiong To Hide \textcolor{gray}{\tiny{(\url{https://vimeo.com/193515863})}}
 \end{frame}
 
 \begin{frame}{}
@@ -165,29 +185,6 @@ Il existe des projet pour se défendre contre ça:
 On y reviendra :)
 \end{frame}
 
-\subsection{La surveillance de masse}
-
-\begin{frame}
-\begin{center}
-\large{\color{cvp}{La surveillance de masse}}
-\end{center}
-\end{frame}
-
-\begin{frame}{Les puissants - la centralisation}
-Nos environnements informatiques utilisent des \textbf{logiciels propriétaires},\newline
-et pour la plupart détenue par quelques uns qui ont un \textbf{poids important} dans notre société. \newline
-\newline
-D'où la création du terme \textbf{GAFAM}: Google Apple Facebook Amazon Microsoft
-\end{frame}
-
-\begin{frame}{Les besoins}
-Accéder au code source permet d'\textbf{auditer} le code et vérifier que le logiciel correspond à ce pourquoi il est fait. \newline
-\newline
-Le logiciel libre permet de \textbf{modifier} le code pour nos besoins personnels.\newline
-\newline
-Ainsi que la \textbf{décentralisation}.
-\end{frame}
-
 
 % *******************************
 % ****  COMMENT SE PROTEGER  ****
@@ -201,11 +198,17 @@ Ainsi que la \textbf{décentralisation}.
 \end{center}
 \end{frame}
 
+\subsection{Avec du logiciel Libre}
+
 \begin{frame}
-En utilisant du logiciel Libre.\newline
-On se permet d'auditer le code source,\newline
-de l'adapter pour soi même.\newline
-Donc il ne \textbf{dépend pas} d'un \textbf{modèle économique} particulier.
+Accéder au code source permet d'\textbf{auditer} le code et vérifier que le logiciel correspond à ce pourquoi il est fait.\footnote{Confiance par la transparence $ \neq $ Sécurité pas l'obscurité.} \newline
+\newline
+Le logiciel libre permet de \textbf{modifier} le code pour nos besoins personnels.\newline
+\newline
+Ainsi que d'installer librement le logiciel.\newline
+\textcolor{gray}{\tiny{On peut appeler ça la \textbf{décentralisation} pour des serveurs, c'est ce qui permet l'autonomie.}}\newline
+\newline
+De faite, le logiciel libre ne \textbf{dépend pas} d'un \textbf{modèle économique} particulier.
 \end{frame}
 
 \subsection{Avec quels logiciels ?}
@@ -253,12 +256,12 @@ Google $\to$ Duckduckgo\newline
 \newline
 Tor Browser \textcolor{gray}{\tiny{(anciennement Orfox)}}\newline
 \newline
-Orobot \textcolor{gray}{\tiny{(Proxy pour le réseau Tor)}}
+Orbot \textcolor{gray}{\tiny{(Proxy pour le réseau Tor)}}
 \end{frame}
 
 \subsection{Réseaux sociaux}
 \begin{frame}
-Facebook $\to$ slim social \textcolor{gray}{\tiny{(ou Frost for fackbook)}}\newline
+Facebook $\to$ slim social \textcolor{gray}{\tiny{(ou Frost for facebook)}}\newline
 \newline
 Diaspora\newline
 Mastodon
@@ -295,7 +298,7 @@ Google $\to$ Duckduckgo
 	\item[Caméra] Open Caméra
 	\item[Transport] Transportr
 	\item[Bloqueur] Blokada
-	\item[Liseure] Book Reader
+	\item[Liseuse] Book Reader
 	\item[Luminosité] Red Moon
 	\item[Battery] Drowser
 \end{description}
@@ -316,26 +319,41 @@ Google $\to$ Duckduckgo
 
 \subsection{État de l'art}
 \begin{frame}
-Il n'existe pas beaucoup d'alternatives complètes, car la difficulté est le support matériel du téléphone.
-
+Il n'existe pas beaucoup d'alternatives complètes, car la difficulté est le support matériel du téléphone. (Il n'existe pas de matériel Libre.)\newline
+\newline
 Exemple:
 \begin{itemize}
-	\item Replicant
-	\item PureOS
-	\item LineageOS
+	\item \href{https://www.replicant.us}{Replicantk}
+	\item \href{https://www.pureos.net}{PureOS}
+	\item \href{https://e.foundation}{/e/}
+	\item \href{https://www.plasma-mobile.org}{PlasmaMobile}
+	\item \href{https://lineageos.org}{LineageOS}
 \end{itemize}
 \end{frame}
 
 \subsection{Replicant}
 \begin{frame}
-\href{https://fr.wikipedia.org/wiki/Replicant_\%28syst\%C3\%A8me_d\%27exploitation\%29}{Replicant} est un système d'exploitation entièrement libre pour les smartphones et les tablettes, en remplaçant les composants privateurs d'Android par leurs équivalents libres.
+\href{https://fr.wikipedia.org/wiki/Replicant_\%28syst\%C3\%A8me_d\%27exploitation\%29}{\textbf{Replicant}} est un système d'exploitation \textbf{entièrement libre} pour les smartphones et les tablettes, en remplaçant les composants privateurs d'Android par leurs équivalents libres.
 \end{frame}
 
 \subsection{PureOS}
 \begin{frame}
-Fait pour \href{https://puri.sm/products/librem-5/}{Librem5}.\newline
+\href{https://puri.sm/products/librem-5/pureos-mobile/}{\textbf{PureOS}} est un OS (non-Android) pour le téléphone \href{https://puri.sm/products/librem-5/}{Librem5} fabriqué par Purism.\newline
+\newline
+L'OS est un système GNU/Linux.\newline
+Peut se lier avec KDE et Gnome.
+\end{frame}
 
-\url{https://puri.sm/products/librem-5/pureos-mobile/}
+\subsection{/e/}
+\begin{frame}
+/e/ une entreprise faisant un OS pour smatphone basé sur Android, sans la sur-couche google.\newline
+\newline
+Leur \href{https://e.foundation/wp-content/uploads/ManifesteFR.pdf}{Manifeste}.
+\end{frame}
+
+\subsection{Plasma-mobile}
+\begin{frame}
+Plasma Mobile est un OS basé sur GNU/Linux, fait pour fonctionner avec gestionnaire de fenêtre Linux KDE.
 \end{frame}
 
 \subsection{LineageOS}
