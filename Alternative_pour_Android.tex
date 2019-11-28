@@ -26,9 +26,12 @@
 % Pour les hyperliens
 \usepackage{hyperref}
 
-
 % Pour rayer un texte avec \sout{}
 \usepackage{ulem}
+
+% Pour les icones awesome
+\usepackage{fontawesome}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title[U-Boot]{Café Vie Privée \\ \textbf{Alternative pour Android}}
 \titlegraphic{\includegraphics[width=.5\textwidth]{logos/CVP-Nantes.png}}
@@ -42,6 +45,10 @@
 % ========================
 % (activer le debugage par usb pour accèder vie adb)
 % adb shell screenrecord --output-format=h264 - | ffplay -
+
+% Pour streamer l'écran
+% =====================
+% Utiliser l'application ScreenSream disponible sur F-droid
 
 \begin{document}
 
@@ -323,7 +330,7 @@ Il n'existe pas beaucoup d'alternatives complètes, car la difficulté est le su
 \newline
 Exemple:
 \begin{itemize}
-	\item \href{https://www.replicant.us}{Replicantk}
+	\item \href{https://www.replicant.us}{Replicant}
 	\item \href{https://www.pureos.net}{PureOS}
 	\item \href{https://e.foundation}{/e/}
 	\item \href{https://www.plasma-mobile.org}{PlasmaMobile}
@@ -346,24 +353,51 @@ Peut se lier avec KDE et Gnome.
 
 \subsection{/e/}
 \begin{frame}
-/e/ une entreprise faisant un OS pour smatphone basé sur Android, sans la sur-couche google.\newline
+\textbf{/e/} une entreprise faisant un OS pour smatphone (éponyme) basé sur Android, sans la sur-couche google.\newline
 \newline
-Leur \href{https://e.foundation/wp-content/uploads/ManifesteFR.pdf}{Manifeste}.
+Leur \href{https://e.foundation/wp-content/uploads/ManifesteFR.pdf}{Manifeste} décrit leur démarche.
 \end{frame}
 
 \subsection{Plasma-mobile}
 \begin{frame}
-Plasma Mobile est un OS basé sur GNU/Linux, fait pour fonctionner avec gestionnaire de fenêtre Linux KDE.
+\textbf{Plasma Mobile} est un OS basé sur GNU/Linux, fait pour fonctionner avec gestionnaire de fenêtre Linux KDE.
 \end{frame}
 
 \subsection{LineageOS}
+
 \begin{frame}
-- Théorie avec microG
+\textbf{LineageOS} est un OS pour les téléphones et tablettes basé sur Android Open Source Project (AOSP).\newline
+\newline
+C'est un fork de Cyanogenmod créer en décembre 2016.
 \end{frame}
+
+\begin{frame}{Un système «classique»}
+% Documentation:
+% https://linuxfr.org/news/installer-lineageos-sur-son-appareil-android
+% https://www.montelephonelibre.fr
+\begin{center}
+\includegraphics[width=.75\textwidth]{schemas/Android_private.png}
+\end{center}
+\textcolor{gray}{\tiny{Image tiré de \url{https://www.montelephonelibre.fr}}}
+\end{frame}
+
+\begin{frame}{Un système plus libre}
+\begin{center}
+\includegraphics[width=.75\textwidth]{schemas/Android_free.png}
+\end{center}
+\textcolor{gray}{\tiny{Image tiré de \url{https://www.montelephonelibre.fr}}}
+\end{frame}
+
 \subsection{MicroG}
 \begin{frame}
-- Avantage du contrôle accès applications
-- Démo
+LineageOS permet d'utiliser son système avec \textbf{MircoG}.\newline
+\end{frame}
+
+\subsection{Mise en pratique}
+\begin{frame}
+\begin{center}
+\includegraphics[width=.50\textwidth]{images/retro-phone.jpg}
+\end{center}
 \end{frame}
 
 \end{document}
