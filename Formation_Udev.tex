@@ -1,0 +1,415 @@
+% Copyright (C)  2018  TANSORIER.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.3
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+% A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+% https://www.gnu.org/licenses/fdl-1.3.html
+
+% compress option to have horyzontal circle
+\documentclass[compress,aspectratio=169]{beamer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Thèmes suppélmentaires
+\useoutertheme[]{miniframes} % barre menu du haut
+\setbeamertemplate{frametitle}[default] % replace le titre à la bonne place
+\useinnertheme[shadow=true]{rounded} % arrondi les angles
+\usecolortheme{orchid}
+\usecolortheme{whale}
+
+%\usepackage{xcolor}
+%\definecolor{smileOrange}{RGB}{254,128,86}
+
+\setbeamertemplate{footline}[text line]{
+\textcolor{gray}{%
+	\parbox{\linewidth}{\vspace*{-8pt}Smile\hfill\insertshortauthor\hfill\insertpagenumber/\inserttotalframenumber}}
+}
+\beamertemplatenavigationsymbolsempty
+
+% Language
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage[latin1]{inputenc}
+
+% Display Table Of Content spécific for smilebeamer
+% Force to get empty
+\AtBeginSection[]{}
+\AtBeginSubsection[]{}
+%{
+%  \begin{frame}<beamer>
+%  \frametitle{Plan}
+%  \tableofcontents[currentsection]
+%  \end{frame}
+%}
+
+% Change color of definiton block
+\AtBeginEnvironment{definition}{%
+	\setbeamercolor{block title}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+	\setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+}
+
+
+% code coloration
+\usepackage{listings}
+% L'option "[fragile]" doit être rajouté au frame pour pouvoir utiliser correctement
+% la police verbatim
+\usepackage{color}
+\lstset{
+  breaklines=true,
+  tabsize=4,
+  backgroundcolor=\color[RGB]{49,54,59},
+  basicstyle=\footnotesize\ttfamily\color{white},
+  commentstyle=\itshape\color[RGB]{0,136,136},
+  morecomment=[l]{\#},
+  morekeywords={*,\$,\{,\}},
+  stringstyle=\itshape\color[RGB]{218,116,0},
+  showstringspaces=false,
+  frame=LTBR,
+}
+\lstdefinestyle{shell}{
+  language=bash,
+  keywords={\$},
+  keywordstyle=\bfseries\color[RGB]{66,198,66}
+}
+\lstdefinelanguage{diff}{
+  morecomment=[f][\color{blue}]{@@},     % group identifier
+  morecomment=[f][\color{red}]-,         % deleted lines 
+  morecomment=[f][\color{green}]+,       % added lines
+  morecomment=[f][\color{magenta}]{---}, % Diff header lines (must appear after +,-)
+  morecomment=[f][\color{magenta}]{+++},
+}
+
+% Pour utiliser des colonnes
+\usepackage{multicol}
+
+% Pour integrer un pdf
+\usepackage[final]{pdfpages}
+
+% Pour les hyperliens
+\usepackage{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[U-Boot]{UDEV \\ \textbf{Gérerer les device node}}
+
+\author[Mickaël Tansorier]{Mickaël Tansorier}
+
+\date[Août 2018]{Présentation du fonctionnement d'UDEV.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+%\tableofcontents[subsectionstyle=hide]
+
+% *******************************
+% ****     PAGE DE GARDE     ****
+% *******************************
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+
+% *******************************
+% ****      INTRODUCTION     ****
+% *******************************
+
+\begin{frame}{Plan}
+\tableofcontents[hideallsubsections]
+\end{frame}
+
+\section{Introduction}
+
+\subsection{device-node}
+
+\begin{frame}
+\texttt{UDEV} est un démon chargé de gérer les device-nodes.
+\begin{block}{Principe d'unix}
+Tout est fichier
+\end{block}
+Donc les périphériques matériels sont des pseudo-fichier.\newline
+Ils peuvent être manipulés par: cat, grep, open(), read(), write() etc…\newline
+\newline
+Ils sont stockés dans: \texttt{/dev} \newline
+On les appelle device-nodes.
+\end{frame}
+
+\begin{frame}
+\begin{list}{-}{Les device nodes sont:}
+\item des points d'entrée vers le noyau
+\item de type bloc ou char
+\item identifiés par un majeur et un mineur
+\end{list}
+$ $\newline
+Le majeur permet au noyau de savoir quel driver doit gérer le périphérique.\newline
+Le mineur permet au driver de savoir quel périphérique parmi ceux qu’il gère est utilisé.
+
+	\end{frame}
+
+\subsection{Historique}
+\begin{frame}{}
+\begin{itemize}
+\item Le script \texttt{MAKEDEV}
+\begin{itemize}
+	\item[-] Les majeur et mineur était codés en dur dans un script appelé par la commande mknode.
+	\item[-] Pour créer les périphériques dans \texttt{/dev}.
+	\item[-] Tout ceux possible existaient sur le système (\texttt{\~} 18 000)
+	\item[-] Ne gère pas le hotplug
+\end{itemize}
+\item Le \texttt{devfs}
+\begin{itemize}
+	\item[-] Les noeuds ne sont plus crées par le système mais par les drivers eux-mêmes à la détection d'un périphérique.
+	\item[-] Mais les majeurs mineurs étaient toujours codé en dur
+	\item[-] devfs est difficile à paramétrer
+\end{itemize}
+\item Le \texttt{udev}
+\begin{itemize}
+	\item[-] udev est un programme purement user-space
+	\item[-] udev évolue en s'appuyant sur les évolutions du noyau
+	\item[-] Il s’appuie sur les informations laissées dans \texttt{/sys} (majeur et mineur)
+	\item[-] Le noyau fournit un lien netlink qui permet à udev d'être prévenu lors d'un changement.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+% *******************************
+% ****     PRÉSENTATION      ****
+% *******************************
+
+\section{Les événements noyau}
+
+\subsection{monitor}
+
+\begin{frame}[fragile]
+\texttt{udev} réagit donc à des événements envoyés par le noyau via \texttt{inotify}.
+
+\begin{lstlisting}[style=shell]
+udevadm monitor -k
+\end{lstlisting}
+Lorsque l'on branche un USB:
+\begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
+KERNEL[805.692293] add      /devices/soc0/soc/2100000.aips-bus/2184200.usb/ci_hdrc.1/usb1/1-1 (usb)
+KERNEL[805.694999] add      /devices/soc0/soc/2100000.aips-bus/2184200.usb/ci_hdrc.1/usb1/1-1/1-1:1.0 (usb)
+KERNEL[806.006810] add      /devices/soc0/soc/2100000.aips-bus/2184200.usb/ci_hdrc.1/usb1/1-1/1-1:1.0/net/eth1 (net)
+KERNEL[806.006948] add      /devices/soc0/soc/2100000.aips-bus/2184200.usb/ci_hdrc.1/usb1/1-1/1-1:1.0/net/eth1/queues/rx-0 (queues)
+KERNEL[806.007010] add      /devices/soc0/soc/2100000.aips-bus/2184200.usb/ci_hdrc.1/usb1/1-1/1-1:1.0/net/eth1/queues/tx-0 (queues)
+\end{lstlisting}
+Et si l'on retire:
+\begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
+KERNEL[800.026043] remove   /devices/soc0/soc/2100000.aips-bus/2184200.usb/ci_hdrc.1/usb1/1-1/1-1:1.0/net/eth1/queues/rx-0 (queues)
+KERNEL[800.026228] remove   /devices/soc0/soc/2100000.aips-bus/2184200.usb/ci_hdrc.1/usb1/1-1/1-1:1.0/net/eth1/queues/tx-0 (queues)
+KERNEL[800.026366] remove   /devices/soc0/soc/2100000.aips-bus/2184200.usb/ci_hdrc.1/usb1/1-1/1-1:1.0/net/eth1 (net)
+KERNEL[800.050534] remove   /devices/soc0/soc/2100000.aips-bus/2184200.usb/ci_hdrc.1/usb1/1-1/1-1:1.0 (usb)
+KERNEL[800.080535] remove   /devices/soc0/soc/2100000.aips-bus/2184200.usb/ci_hdrc.1/usb1/1-1 (usb)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+On peut demander à \texttt{udev} de nous fournir les propriétés du périphérique:
+\begin{lstlisting}[basicstyle=\tiny\ttfamily\color{white}]
+udevadm monitor -k -p
+\end{lstlisting}
+Pour une seule sortie:
+\begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
+KERNEL[5763.052898] add      /devices/soc0/soc/2100000.aips-bus/2184200.usb/ci_hdrc.1/usb1/1-1 (usb)
+ACTION=add
+BUSNUM=001
+DEVNAME=/dev/bus/usb/001/003
+DEVNUM=003
+DEVPATH=/devices/soc0/soc/2100000.aips-bus/2184200.usb/ci_hdrc.1/usb1/1-1
+DEVTYPE=usb_device
+MAJOR=189
+MINOR=2
+PRODUCT=bda/8153/3000
+SEQNUM=1544
+SUBSYSTEM=usb
+TYPE=0/0/0
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+Les propriétés dépendent du type exact de périphérique mais certaines propriétés sont toujours présentes:
+\begin{itemize}
+    \item \texttt{ACTION} : Le type d’événement à traiter,
+    \item \texttt{MAJOR}, \texttt{MINOR} : Les numéro majeur et mineur du périphérique concerné,
+    \item \texttt{SEQNUM} : un numéro croissant pour ordonner les événements,
+    \item \texttt{SUBSYSTEM} : Le sous-système noyau ayant causé l’événement,
+    \item \texttt{DEVPATH} : Le fichier dans \texttt{/sys} correspondant au périphérique.
+\end{itemize}
+\end{frame}
+
+% *******************************
+% ****     PRÉSENTATION      ****
+% *******************************
+
+\section{Les règles udev}
+
+\begin{frame}[fragile]{L’écriture de règles}
+Les règles udev peuvent venir de plusieurs endroits différents:
+\begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
+/etc/udev/rules.d/      # regles locales ajoutees par l'administrateur
+/run/udev/rules.d/      # regles volatiles, generalement creees par d'autres regles
+/usr/lib/udev/rules.d/  # regles fourni par la distribution
+/lib/udev/rules.d/      # regles fourni par la distribution
+\end{lstlisting}
+
+Les fichiers sont préfixé par un numéro (comme init), et postfixé par \texttt{.rules}.\newline
+Exemple: \texttt{/usr/lib/udev/rules.d/82-net-usb-up.rules}
+\begin{lstlisting}[style=shell]
+ACTION=="add", RUN+="/bin/sh -c '/bin/echo %k : %p >> /root/events'"
+\end{lstlisting}
+\end{frame}
+
+\subsection{Les règles de filtrage}
+
+\begin{frame}[fragile]
+Pour filtrer les évènements on utilise la syntaxe: \texttt{PROPRIETE==valeur} \newline
+"\texttt{==}", "\texttt{!=}", "\texttt{=}", "\texttt{+=}", "\texttt{-=}", "\texttt{:=}"
+\newline
+\newline
+Le champs \texttt{PROPRIETE} peut prendre les valeurs suivantes:
+\begin{itemize}
+    \item \texttt{ATTR\{fichier\}} — permet de filtrer sur le contenu d’un fichier dans le répertoire sysfs correspondant à l’événement en cours.
+    \item \texttt{ATTRS\{fichier\}} — idem + également sur ceux des périphériques parents (bus, plateforme etc…).
+    \item \texttt{ENV\{clé\}} — permet de filtrer sur une propriété ajoutée par une autre règle udev.
+    \item \texttt{PROGRAM} — permet de filtrer sur la valeur de retour d’un programme.
+\end{itemize}
+\end{frame}
+
+\subsection{Les actions possibles}
+
+\begin{frame}[fragile]
+Lorsque l'on a le filtrage que l'on souhaite, on peut effectuer des actions avec les options suivantes:
+\begin{itemize}
+    \item \texttt{SYMLINK} — crée un lien symbolique vers le fichier \texttt{/dev} du pérphérique. Le  noyau fournit un premier fichier \texttt{/dev} dont le nom ne peut pas être changé.
+    \item \texttt{OWNER}, \texttt{GROUP}, \texttt{MODE}, \texttt{SECLABEL\{module\}} — permet de préciser les droits d’accès et les propriétés SELinux du périphérique.
+    \item \texttt{ATTR\{fichier\}} — permet d’écrire une valeur dans un fichier du répertoire sysfs correspondant au périphérique.
+    \item \texttt{ENV\{clé\}} — permet de positionner un attribut interne à udev pour le périphérique en cours,
+    \item \texttt{RUN} — permet d’exécuter un programme
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+Certain mots clés peuvent être utilisés pour ces actions, comme:
+\begin{itemize}
+    \item \texttt{\$kernel}, \texttt{\%k} — The kernel name for this device.
+    \item \texttt{\$devpath}, \texttt{\%p} — The devpath of the device.
+\end{itemize}
+Exemple:
+\begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
+ACTION=="add", SUBSYSTEM=="net", RUN+="/bin/sh -c '/bin/echo %k : %p >> /root/events'"
+\end{lstlisting}
+Donne
+\begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
+$ cat /tmp/event 
+usb0 : /devices/soc0/soc/2100000.aips-bus/2184000.usb/ci_hdrc.0/gadget/net/usb0
+eth0 : /devices/soc0/soc/2100000.aips-bus/2188000.ethernet/net/eth0
+eth1 : /devices/soc0/soc/2100000.aips-bus/2184200.usb/ci_hdrc.1/usb1/1-1/1-1:1.0/net/eth1
+sit0 : /devices/virtual/net/sit0
+lo : /devices/virtual/net/lo
+\end{lstlisting}
+\end{frame}
+
+% *******************************
+% ****     PRÉSENTATION      ****
+% *******************************
+\section{Analyse d'évènements}
+
+\subsection{Trouver les propriétés d'un périphérique}
+\begin{frame}[fragile]
+retrouver le répertoire sysfs d'un device:
+\begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
+$ udevadm info -x -q path -n /dev/hidraw0
+/devices/pci0000:00/0000:00:14.0/usb1/1-1/1-1.3/1-1.3:1.0/0003:046D:C01A.0015/hidraw/hidraw0
+\end{lstlisting}
+Obtenir des info sur le device:
+\begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
+$ udevadm info /sys/devices/pci0000:00/0000:00:14.0/usb1/1-1/1-1.3/1-1.3:1.0/0003:046D:C01A.0015/hidraw/hidraw0
+P: //devices/pci0000:00/0000:00:14.0/usb1/1-1/1-1.3/1-1.3:1.0/0003:046D:C01A.0015/hidraw/hidraw0
+N: hidraw0
+E: DEVNAME=/dev/hidraw0
+E: DEVPATH=//devices/pci0000:00/0000:00:14.0/usb1/1-1/1-1.3/1-1.3:1.0/0003:046D:C01A.0015/hidraw/hidraw0
+E: MAJOR=247
+E: MINOR=0
+E: SUBSYSTEM=hidraw
+\end{lstlisting}
+\begin{itemize}
+    \item E: une propriété purement udev. elles sont accessibles grâce à \texttt{ENV\{\}}
+    \item N: le nom du périphérique suggéré par le noyau
+    \item S: les liens symboliques créés vers le périphérique
+    \item P: le chemin vers l’entrée dans \texttt{sysfs}
+\end{itemize}
+\end{frame}
+
+\subsection{Surveiller les évènements}
+\begin{frame}[fragile]
+Monitorer les actions en direct:
+\begin{lstlisting}[style=shell]
+$ udevadm monitor -p
+\end{lstlisting}
+L'option \texttt{-p} permet d'avoir les propriétés des évènements.
+\end{frame}
+
+\subsection{Tester des évènements}
+\begin{frame}[fragile]
+Tester un évènement:
+\begin{lstlisting}[style=shell]
+$ udevadm test -a add /sys/devices/pci0000:00/0000:00:14.0/usb1/1-1/1-1.3/1-1.3:1.0/0003:046D:C01A.0018/hidraw/hidraw0
+\end{lstlisting}
+\end{frame}
+
+
+
+% *******************************
+% ****     PRÉSENTATION      ****
+% *******************************
+
+\section{Divers}
+
+\subsection{La règle réseau}
+
+\begin{frame}[fragile]
+\begin{lstlisting}[style=shell]
+$ cat board/eolane/modx6/rootfs_pendant/usr/lib/udev/rules.d/82-net-usb-up.rules 
+# do not edit this file, it will be overwritten on update
+
+ACTION!="add", GOTO="net_usb_up_end"
+SUBSYSTEM!="net", GOTO="net_usb_up_end"
+
+ENV{ID_BUS}=="usb", RUN+="/bin/sh -c 'ifup %k'"
+
+LABEL="net_usb_up_end"
+\end{lstlisting}
+\end{frame}
+
+\subsection{mdev}
+\begin{frame}[fragile]
+\texttt{mdev} est un utilitaire similaire à \texttt{udev} présent dans \texttt{busybox}. Très utilisé dans l'embarqué.\newline
+\newline
+Mais \texttt{udev} est déjà très léger (le binaire fait 520K).
+\end{frame}
+
+% *******************************
+% ****     PRÉSENTATION      ****
+% *******************************
+
+\section*{Conclusion}
+\begin{frame}
+\begin{center}
+\begin{huge}
+Question ?
+\end{huge}
+\end{center}
+\begin{center}
+\textcolor{gray}{\tiny{Enfin je vais essayer de répondre...}}
+\end{center}
+$ $\newline
+\newline
+Document basé sur:\newline
+\url{http://www.linuxembedded.fr/2015/05/une-introduction-a-udev/}
+\end{frame}
+
+\end{document}
