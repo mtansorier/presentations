@@ -7,6 +7,7 @@ Pésentations
 4. Prentation fitImage & signature de paquets - Introduction
 5. Udev - Gérer les divices nodes
 6. Yocto devtool et autre - Comment développer efficassement sous Yocto
+7. Mémoires - Partitionnement et manipulation de mémoires
 
 
 L'alternative Logiciel Libre
@@ -54,9 +55,15 @@ Nom du projet à compiler: **Formation_Udev**
 
 Yocto devtool et autre - Comment développer efficassement sous Yocto
 --------------------------------------------------------------------
-_Présentation d'outils de développement pour travailler efficassement sous Yocto_
+_Présentation d'outils de développement pour travailler efficassement sous Yocto._
 
 Nom du projet à compiler: **Yocto-devel**
+
+Mémoires - Partitionnement et manipulation de mémoires
+------------------------------------------------------
+_Présentation sur la manipulation de zones mémoires, leur formatage et de leur secteur. Spécifiquement lié à l'utilisation de U-boot et de ses variable d'environnement._
+
+Nom du projet à compiler: **Formation_Memoires**
 
 Compilation
 ===========

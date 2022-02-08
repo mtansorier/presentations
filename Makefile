@@ -1,4 +1,4 @@
-PRESENTATIONS = Logiciel_Libre Yocto-RapsberryPi-devtool-Ansible Alternative_pour_Android Presentation_fitImage Formation_Udev
+PRESENTATIONS = Logiciel_Libre Yocto-RapsberryPi-devtool-Ansible Alternative_pour_Android Presentation_fitImage Formation_Udev Yocto-devel Formation_Memoires
 
 # Individual project
 
@@ -11,6 +11,10 @@ Alternative_pour_Android: Alternative_pour_Android.pdf
 Presentation_fitImage: Presentation_fitImage.pdf
 
 Formation_Udev: Formation_Udev.pdf
+
+Yocto-devel: Yocto-deve.pdf
+
+Formation_Memoires: Formation_Memoires.pdf
 
 # Commun project
 

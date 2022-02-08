@@ -1,0 +1,531 @@
+% Copyright (C)  2018  TANSORIER.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.3
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+% A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+
+% https://www.gnu.org/licenses/fdl-1.3.html
+
+% compress option to have horyzontal circle
+\documentclass[compress]{beamer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Thèmes suppélmentaires
+\useoutertheme[]{miniframes} % barre menu du haut
+\setbeamertemplate{frametitle}[default] % replace le titre à la bonne place
+\useinnertheme[shadow=true]{rounded} % arrondi les angles
+\usecolortheme{orchid}
+\usecolortheme{whale}
+
+%\usepackage{xcolor}
+%\definecolor{smileOrange}{RGB}{254,128,86}
+
+\setbeamertemplate{footline}[text line]{
+\textcolor{gray}{%
+	\parbox{\linewidth}{\vspace*{-8pt}Smile\hfill\insertshortauthor\hfill\insertpagenumber/\inserttotalframenumber}}
+}
+\beamertemplatenavigationsymbolsempty
+
+% Language
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage[latin1]{inputenc}
+
+% Display Table Of Content spécific for smilebeamer
+% Force to get empty
+\AtBeginSection[]{}
+\AtBeginSubsection[]{}
+%{
+%  \begin{frame}<beamer>
+%  \frametitle{Plan}
+%  \tableofcontents[currentsection]
+%  \end{frame}
+%}
+
+% Change color of definiton block
+\AtBeginEnvironment{definition}{%
+	\setbeamercolor{block title}{use=example text,fg=example text.fg,bg=example text.fg!20!bg}
+	\setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!50!bg}
+}
+
+
+% code coloration
+\usepackage{listings}
+% L'option "[fragile]" doit être rajouté au frame pour pouvoir utiliser correctement
+% la police verbatim
+\usepackage{color}
+\lstset{
+  breaklines=true,
+  tabsize=4,
+  backgroundcolor=\color[RGB]{49,54,59},
+  basicstyle=\footnotesize\ttfamily\color{white},
+  commentstyle=\itshape\color[RGB]{0,136,136},
+  morecomment=[l]{\#},
+  morekeywords={*,\$,\{,\}},
+  stringstyle=\itshape\color[RGB]{218,116,0},
+  showstringspaces=false,
+  frame=LTBR,
+}
+\lstdefinestyle{shell}{
+  language=bash,
+  keywords={\$},
+  keywordstyle=\bfseries\color[RGB]{66,198,66}
+}
+\lstdefinelanguage{diff}{
+  morecomment=[f][\color{blue}]{@@},     % group identifier
+  morecomment=[f][\color{red}]-,         % deleted lines 
+  morecomment=[f][\color{green}]+,       % added lines
+  morecomment=[f][\color{magenta}]{---}, % Diff header lines (must appear after +,-)
+  morecomment=[f][\color{magenta}]{+++},
+}
+
+% Pour utiliser des colonnes
+\usepackage{multicol}
+
+% Pour integrer un pdf
+\usepackage[final]{pdfpages}
+
+% Pour les hyperliens
+\usepackage{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[U-Boot]{Memoires \\ \textbf{Partitionnement et manipulation de mémoires}}
+
+\author[Mickaël Tansorier]{Mickaël Tansorier}
+
+\date[Août 2018]{Présentation du fonctionnement Globale de mémoire.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+%\tableofcontents[subsectionstyle=hide]
+
+% *******************************
+% ****     PAGE DE GARDE     ****
+% *******************************
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+
+% *******************************
+% ****      INTRODUCTION     ****
+% *******************************
+
+\begin{frame}{Plan}
+\tableofcontents[hideallsubsections]
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}{}
+Si l'on veux scripter les créations/modifications de partitions, il faut connaître:
+\begin{itemize}
+	\item Comment fonctionne les tables de partition
+	\item Le type de partitionnement
+	\item le Format de partitionnement
+	\item Les outils de partitionnement
+\end{itemize}
+\end{frame}
+
+
+% *******************************
+% ****     PRÉSENTATION      ****
+% *******************************
+
+\section{Le types, les tables et le format de partitions}
+
+\subsection{Type de partitionnent}
+\begin{frame}[fragile]
+Il existe trois types de partitions:
+\begin{itemize}
+	\item \texttt{primary} — est utiliser comme partition de boot (pour windows)
+	\item \texttt{extended} — sert à abriter de multible partitions logique
+	\item \texttt{logical} — sert à abriter les fichier non relatif au système (audio, vidéo, ...)
+\end{itemize}
+
+\begin{lstlisting}[basicstyle=\tiny\ttfamily\color{white}]
++----------+----------+------------------------------------------------------+
+|          |          | +---------+    +--------------------------+          |
+|          |          | |         |    |            |             |          |
+|    P1    |    P2    | |   L1    |    |     L2     |     L3      |    E1    |
+|          |          | |         |    |            |             |          |
+|          |          | +---------+    +--------------------------+          |
++----------+----------+------------------------------------------------------+
+\end{lstlisting}
+\end{frame}
+
+\subsection{Table de partition}
+
+\begin{frame}[fragile]
+Le type de table de partition défini l'entête du block device.\newline
+On le retrouve sous l’appellation label sous parted.\newline
+Il en existe de plusieurs types: \texttt{aix}, \texttt{amiga}, \texttt{bsd}, \texttt{dvh}, \texttt{gpt}, \texttt{loop}, \texttt{mac}, \texttt{msdos}, \texttt{pc98}, ou \texttt{sun}.\newline
+\newline
+En règle général on se trouve en MBR (Master boot record) (ou \texttt{msdos}) car c'est le plus courant pour des système simpliste.\newline
+Donc dans le doute c'est celui-là qu'il faut choisir... :) \newline
+En effet \texttt{GPT} est son "successeur" et s'adresse à l'utilisation de boot en UEFI.
+\end{frame}
+
+\begin{frame}[fragile]{Exemple de différences}
+Taille de partitions:
+\begin{itemize}
+	\item Avec \texttt{msdos} il est impossible de créer une partition supérieur à 2.2 To ($2^{41}$ octets) sur des secteur de bloc de 512 byte.
+	\item Avec \texttt{GPT} (GUID Partition Table) il est possible de créer une partition allant jusqu'à 9,4 Zo (9,4 x 1021 octets)
+\end{itemize}
+Nombre de block:
+\begin{itemize}
+	\item Avec \texttt{GTP} il est possible de créer jusqu'à 128 block logique
+	\item Avec \texttt{msdos} on peut aller seulement jusqu'à 4 block
+\end{itemize}
+Du fait de ses limitations le système de partitions \texttt{MBR} est remplacé la plupart du temps depuis 2013 par le système \texttt{GPT}.
+\end{frame}
+
+\subsection{Format de système de fichier}
+
+\begin{frame}[fragile]
+Le type de partition est défini par un numéro d'id.\newline
+Ce numéro se trouve en entête de partition.
+\begin{lstlisting}[basicstyle=\tiny\ttfamily\color{white}]
+ 0  Empty           24  NEC DOS         81  Minix / old Lin bf  Solaris        
+ 1  FAT12           27  Hidden NTFS Win 82  Linux swap / So c1  DRDOS/sec (FAT-
+ 2  XENIX root      39  Plan 9          83  Linux           c4  DRDOS/sec (FAT-
+ 3  XENIX usr       3c  PartitionMagic  84  OS/2 hidden or  c6  DRDOS/sec (FAT-
+ 4  FAT16 <32M      40  Venix 80286     85  Linux extended  c7  Syrinx         
+ 5  Extended        41  PPC PReP Boot   86  NTFS volume set da  Non-FS data    
+ 6  FAT16           42  SFS             87  NTFS volume set db  CP/M / CTOS / .
+ 7  HPFS/NTFS/exFAT 4d  QNX4.x          88  Linux plaintext de  Dell Utility   
+ 8  AIX             4e  QNX4.x 2nd part 8e  Linux LVM       df  BootIt         
+ 9  AIX bootable    4f  QNX4.x 3rd part 93  Amoeba          e1  DOS access     
+ a  OS/2 Boot Manag 50  OnTrack DM      94  Amoeba BBT      e3  DOS R/O        
+ b  W95 FAT32       51  OnTrack DM6 Aux 9f  BSD/OS          e4  SpeedStor      
+ c  W95 FAT32 (LBA) 52  CP/M            a0  IBM Thinkpad hi ea  Rufus alignment
+ e  W95 FAT16 (LBA) 53  OnTrack DM6 Aux a5  FreeBSD         eb  BeOS fs        
+ f  W95 Ext'd (LBA) 54  OnTrackDM6      a6  OpenBSD         ee  GPT            
+10  OPUS            55  EZ-Drive        a7  NeXTSTEP        ef  EFI (FAT-12/16/
+11  Hidden FAT12    56  Golden Bow      a8  Darwin UFS      f0  Linux/PA-RISC b
+12  Compaq diagnost 5c  Priam Edisk     a9  NetBSD          f1  SpeedStor      
+14  Hidden FAT16 <3 61  SpeedStor       ab  Darwin boot     f4  SpeedStor      
+16  Hidden FAT16    63  GNU HURD or Sys af  HFS / HFS+      f2  DOS secondary  
+17  Hidden HPFS/NTF 64  Novell Netware  b7  BSDI fs         fb  VMware VMFS    
+18  AST SmartSleep  65  Novell Netware  b8  BSDI swap       fc  VMware VMKCORE 
+1b  Hidden W95 FAT3 70  DiskSecure Mult bb  Boot Wizard hid fd  Linux raid auto
+1c  Hidden W95 FAT3 75  PC/IX           bc  Acronis FAT32 L fe  LANstep        
+1e  Hidden W95 FAT1 80  Old Minix       be  Solaris boot    ff  BBT {frame}
+\end{lstlisting}
+\textcolor{gray}{\tiny{Logical Block Addressing: Cet adressage permet de désigner d’une façon unique un secteur d’un disque.}}
+\end{frame}
+
+
+% *******************************
+% ****     PRÉSENTATION      ****
+% *******************************
+
+\section{Les outils}
+
+\begin{frame}[fragile]{Les outils}
+Les outils classique sous Linux:
+\begin{itemize}
+	\item \texttt{parted}
+	\item \texttt{fdisk}
+	\item \texttt{sfdisk}
+\end{itemize}
+\end{frame}
+
+\subsection{Parted}
+
+\begin{frame}[fragile]
+\begin{block}{Objectif}
+Est de rendre scriptable un repartionnement.
+\end{block}
+Donc si vous pensez au confort de \texttt{gparted} vous pouvez oublier...
+\end{frame}
+
+\begin{frame}[fragile]{mkpart}
+Exemple de commande:
+\begin{lstlisting}[style=shell]
+$ parted -a optimal /dev/usb mkpart primary 0% 4096MB
+\end{lstlisting}
+\begin{onlyenv}<2>
+L'option -a (ou --align) peut prendre plusieurs valeurs:
+\begin{itemize}
+\item \texttt{none} — Utilise l'alignement le plus petit autorisé par le disque
+\item \texttt{cylinder} — Aligne les partitions sur les cylindres
+\item \texttt{minimal} — Utilise le le plus petit alignement défini par la topologie du disque.
+\item \texttt{optimal} — Utilise l'alignement le plus optimisé donnée par la topologie du disque.
+\end{itemize}
+\end{onlyenv}
+\begin{onlyenv}<3>
+L'option \texttt{mkpart} prend en paramètre le type de partition (\texttt{primary}, \texttt{extended}, \texttt{logical}).\newline
+Puis en option le type de file système:\newline
+\texttt{mkpart part-type [fs-type] start end}\newline
+Et enfin l'adresse de départ et celle d'arrivé.\newline
+\newline
+Par defaut les valeurs sont en megabit, sinon on peut préciser en pourcent, en secteur \texttt{2024s} ou \texttt{-1s} pour aller jusqu'au dernier secteur
+\end{onlyenv}
+\end{frame}
+
+\begin{frame}[fragile]{label-type}
+\begin{lstlisting}[style=shell]
+mklabel label-type
+\end{lstlisting}
+L'option prend en paramètre une des valeurs:\newline
+\texttt{aix}, \texttt{amiga}, \texttt{bsd}, \texttt{dvh}, \texttt{gpt}, \texttt{loop}, \texttt{mac}, \texttt{msdos}, \texttt{pc98}, ou \texttt{sun}.
+\end{frame}
+
+\begin{frame}[fragile]
+L'option print nous renseigne sur des informations intéressante sur le type de mémoire.
+\begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
+$ parted /dev/mmcblk0
+GNU Parted 3.2
+Using /dev/mmcblk0
+Welcome to GNU Parted! Type 'help' to view a list of commands.
+(parted) print                                                            
+Model: MMC W32508 (sd/mmc)
+Disk /dev/mmcblk0: 7650MB
+Sector size (logical/physical): 512B/512B
+Partition Table: msdos
+Disk Flags: 
+
+Number  Start   End     Size    Type      File system  Flags
+ 1      1049kB  17.8MB  16.8MB  primary   fat32        lba
+ 2      17.8MB  34.6MB  16.8MB  primary   fat32        lba
+ 3      34.6MB  7650MB  7616MB  extended
+ 5      35.7MB  560MB   524MB   logical   ext4
+ 6      561MB   1085MB  524MB   logical   ext4
+ 7      1086MB  3183MB  2097MB  logical   ext4
+ 8      3185MB  3709MB  524MB   logical   ext4
+ 9      3710MB  4234MB  524MB   logical   ext4
+10      4235MB  7650MB  3415MB  logical   ext4
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Alignement}
+La difficulté est de bien aligner les secteurs si l'on utilise l'option optimal.\newline
+On risque de tomber sur ce genre d'avertissement:
+\begin{lstlisting}[style=shell]
+(parted) mkpart primary 0 100%
+Warning: The resulting partition is not properly aligned for best performance.
+Ignore/Cancel?
+\end{lstlisting}
+Si on ignore il va replacer le premier secteur (à \texttt{512B}).
+\end{frame}
+
+\begin{frame}[fragile]
+Pour anticiper ce genre de problème et pour être sûre d'être sur des secteurs optimiser on peut trouver de l'information dans \texttt{/sys/}.
+\begin{lstlisting}[style=shell]
+$ cat /sys/block/sdb/queue/optimal_io_size
+1048576
+$ cat /sys/block/sdb/queue/minimum_io_size
+262144
+$ cat /sys/block/sdb/alignment_offset
+0
+$ cat /sys/block/sdb/queue/physical_block_size
+512
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+Pour connaitre le premier block, il faut prendre:\newline
+$(optimal\_io\_size + alignment\_offset)/physical\_block\_size$ \newline
+\newline
+Sauf qu'il nous manques des infos.\newline
+Dans l'exemple on avait:\newline
+$(1048576 + 0) / 512 = 2048$.\newline
+\begin{lstlisting}[style=shell]
+(parted) mkpart primary 2048s 100%
+\end{lstlisting}
+C'est possible de tester l'alignement de la partition avec 
+\begin{lstlisting}[style=shell]
+(parted) align-check optimal 1"
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{block}{Attention}
+Avec \texttt{parted}, les effets sont immédiat contrairement à \texttt{fdisk} où il faut sauvegarder les changement avant application
+\end{block}
+\end{frame}
+
+\subsection{sfdisk}
+
+\begin{frame}[fragile]{sfdisk}
+\texttt{sfdisk} vs \texttt{fdisk} [man]
+\begin{itemize}
+	\item fdisk - Manipuler la table de partitions d'un disque
+	\item sfdisk - Afficher ou manipuler une table de partitions de disque
+\end{itemize}
+On peut lire: "sfdisk est un outil orienté script pour le partitionnement de n’importe quel périphérique bloc."\newline
+\newline
+\texttt{sfdisk} prend en entrée de ligne au format:
+\begin{lstlisting}[style=shell]
+<start> <size> <id> <bootable> <c,h,s> <c,h,s>
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+Exemple:
+\begin{lstlisting}[style=shell]
+{
+echo ,9,0x0C,*
+echo ,,,-
+} | sfdisk -D -H 255 -S 63 -C $CYLINDERS $DRIVE
+\end{lstlisting}
+Ou
+\begin{lstlisting}[style=shell]
+sfdisk /dev/hdc << EOF
+              0,407
+              ,407
+              ;
+              ;
+              EOF
+\end{lstlisting}
+\end{frame}
+
+
+\subsection{fdisk}
+
+%http://www.octetmalin.net/linux/tutoriels/fdisk-gestion-creer-supprimer-modifier-changer-partition-lister-afficher-disque-dur-ligne-commande.php
+\begin{frame}[fragile]{fdisk}
+\texttt{fdisk} est normalement utilisable sous forme de menu.\newline
+On peut scripter les commandes envoyés au menu:
+\begin{lstlisting}[style=shell]
+(
+	echo "n"    # creer une nouvelle partition
+	echo "p"    # de type primary
+	echo "1"    # de numero 1
+	echo ""     # a partir du premier secteur de libre
+	echo "+16M" # de taille 16Mo
+	echo "w"    # sauvegarder et quitter
+) | fdisk ${DEVICE}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+On peut formater la partition (fat/ext) :
+\begin{lstlisting}[style=shell]
+(
+	echo "t" # change le format
+	echo "1" # partition number
+	echo "c" # id
+	echo "w" #
+) | fdisk ${DEVICE}
+\end{lstlisting}
+c = fat (LBA)\newline
+83 = linux
+\begin{lstlisting}[style=shell]
+$ mkfs.vfat ${DEVICE}p1
+\end{lstlisting}
+\end{frame}
+
+% *******************************
+% ****     PRÉSENTATION      ****
+% *******************************
+
+\section{U-Boot env}
+\begin{frame}[fragile]
+\huge{Var d'environnement d'U-Boot}
+\end{frame}
+
+
+\begin{frame}[fragile]{Erreur de partition d'environnement}
+\begin{lstlisting}[style=shell]
+Warning - bad CRC, using default environment
+\end{lstlisting}
+
+Answer:
+    Most probably everything is OK. The message is printed because the flash sector or ERPROM containing the environment variables has never been initialized yet. The message will go away as soon as you save the envrionment variables using the saveenv command. 
+    
+    \url{https://www.denx.de/wiki/DULG/WarningBadCRCUsingDefaultEnvironment}
+\end{frame}
+
+\begin{frame}[fragile]
+Une des possibilités est que côté espace utilisateur vos paramétrages ne soient pas correcte pour les outils u-boot.\newline
+Exemple d'adressage dans le fichier \texttt{/etc/fw\_env.config}:
+\begin{lstlisting}[style=shell,basicstyle=\tiny\ttfamily\color{white}]
+# Up to two entries are valid, in this case the redundant
+# environment sector is assumed present.
+# MTD device name       Device offset   Env. size       Flash sector size
+/dev/mmcblk0            0x70000          0x2000         0x2000
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+On obtiendrait un partitionnement comme ceci:
+\begin{lstlisting}[style=shell]
++---------------+    0x0000
+|               |
++---------------+    0x2000 8kb
+|               |
+|   mmcblk0p1   |
+|               |
++---------+     |   0x70000 450kb
+|   ENV   |     |
++---------+     |
+|               |
+|               |
++---------------+
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+Avec un correctif adapté on pourrait comme par exemple:
+\texttt{/etc/fw\_env.config}
+\begin{lstlisting}[language=diff,basicstyle=\tiny\ttfamily\color{white}]
+----------- /etc/fw_env.config -----------
+index 650a4c3b7..f833324b4 100644
+@@ -2,4 +2,4 @@
+ # Up to two entries are valid, in this case the redundant
+ # environment sector is assumed present.
+ # MTD device name       Device offset   Env. size       Flash sector size
+-/dev/mmcblk0            0x70000          0x2000         0x2000
++/dev/mmcblk0            0x2000          0x4000          0x200
+\end{lstlisting}
+$0x2000 = 8kb$\newline
+$0x4000 = 16kb$\newline
+$0x200  = 512 bytes$
+\end{frame}
+
+\begin{frame}[fragile]
+On obtiendrait donc dans \texttt{/dev/mmcblk0}:
+\begin{lstlisting}[style=shell]
++---------------+    0x0000
+|               |
++---------------+    0x2000 8kb
+|      ENV      |
+|     16kb      |
++---------------+    0x6000 24kb
+|               |
++---------------+    0x8000 32kb
+|               |
+|   mmcblk0p1   |
+|               |
+|               |
+|               |
+|               |
++---------------+
+\end{lstlisting}
+\end{frame}
+
+
+% *******************************
+% ****     PRÉSENTATION      ****
+% *******************************
+
+\section*{Conclusion}
+\begin{frame}
+\begin{center}
+\begin{huge}
+Question ?
+\end{huge}
+\end{center}
+\begin{center}
+\textcolor{gray}{\tiny{Enfin je vais essayer de répondre...}}
+\end{center}
+\end{frame}
+
+\end{document}
