@@ -4,7 +4,9 @@ Pésentations
 1. L'alternative Logiciel Libre
 2. Yocto - devtool - Ansible: La dernière recette de ma grand-mère
 3. Alternative pour Android
-4. Prentation fitImage - Introduction
+4. Prentation fitImage & signature de paquets - Introduction
+5. Udev - Gérer les divices nodes
+6. Yocto devtool et autre - Comment développer efficassement sous Yocto
 
 
 L'alternative Logiciel Libre
@@ -43,6 +45,18 @@ Presentation fitImage - Introduction
 _Présentation de retour d'expérience de l'utilisation et du fonctionnement du format fitImage. Comment signer les images présentes dans une fitImage. Comment l'adapter dans buildroot._
 
 Nom du projet à compiler: **Presentation_fitImage**
+
+Udev - Gérer les divices nodes
+------------------------------
+_Présentation sur l'utilisation de Udev et des devices node sous linux. Comment ça fonctionne, comment les utiliser, et quels outils utiliser pour écrire des règle simple._
+
+Nom du projet à compiler: **Formation_Udev**
+
+Yocto devtool et autre - Comment développer efficassement sous Yocto
+--------------------------------------------------------------------
+_Présentation d'outils de développement pour travailler efficassement sous Yocto_
+
+Nom du projet à compiler: **Yocto-devel**
 
 Compilation
 ===========
